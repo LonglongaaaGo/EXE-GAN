@@ -1,6 +1,8 @@
-@inproceedings{author20XXtitle,
-  title={Please cite me},
-  author={Author, First and Author, Second and Author, Third},
-  booktitle={Conference},
-  year={20XX}
+@misc{lu2022diverse,
+      title={Diverse facial inpainting guided by exemplars}, 
+      author={Wanglong Lu and Hanli Zhao and Xianta Jiang and Xiaogang Jin and Min Wang and Jiankai Lyu and Kaijie Shi},
+      year={2022},
+      eprint={2202.06358},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
 }
