@@ -262,6 +262,256 @@ latent code, and the exemplar style of exemplar image. We introduce a novel attr
 	
 	
 	
+	<hr>
+	
+	<center><h1>Method</h1></center>
+
+	<table align=center width=420px>
+		<center>
+			<tr>
+				<td>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<table align=center width=400px>
+		<tr>
+			<td align=center width=400px>
+				<center>
+					<td><img class="round" style="width:1000px" src="./resources/Method2.png"/></td>
+				</center>
+			</td>
+			
+		</tr>
+	</table>
+	<table align=center width=850px>
+		<center>
+			<tr>
+				<td>
+				<!-- Short description if wanted-->
+
+				</td>
+			</tr>
+		</center>
+	</table>
+	
+	<table align=center width=400px>
+		<tr>
+			<td align=center width=400px>
+				<center>
+					<td><img class="round" style="width:500px" src="./resources/method3.png"/></td>
+				</center>
+			</td>
+		</tr>
+	</table>
+	<table align=center width=850px>
+		<center>
+			<tr>
+				<td>
+					<!-- Short description if wanted-->
+				</td>
+			</tr>
+		</center>
+	</table>
+	<hr>
+	
+	<center><h1>Comparison with free-form facial inpainting</h1></center>
+
+	<table align=center width=420px>
+		<center>
+			<tr>
+				<td>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<table align=center width=400px>
+		<tr>
+			<td align=center width=400px>
+				<center>
+					<td><img class="round" style="width:1000px" src="./resources/Free-form-inpainting4.png"/></td>
+				</center>
+			</td>
+			
+		</tr>
+	</table>
+	<table align=center width=850px>
+		<center>
+			<tr>
+				<td>
+					<span style="font-size:18px">
+					Qualitative comparison of our method with state-of-the-art free-form inpainting methods on (a-b) CelebA-HQ and (c-d) FFHQ datasets.
+					</span>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<hr>
+	
+	<center><h1>Comparison with guidance-based facial inpainting</h1></center>
+
+	<table align=center width=420px>
+		<center>
+			<tr>
+				<td>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<table align=center width=400px>
+		<tr>
+			<td align=center width=400px>
+				<center>
+					<td><img class="round" style="width:1000px" src="./resources/attribute_transfer4.png"/></td>
+				</center>
+			</td>
+			
+		</tr>
+	</table>
+	<table align=center width=850px>
+		<center>
+			<tr>
+				<td>
+					<span style="font-size:18px">
+					Qualitative comparison of our method with state-of-the-art guidance-based facial inpainting methods on the CelebA-HQ dataset.
+					</span>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<hr>
+	
+	<center><h1>Comparison with facial attribute transfer</h1></center>
+	<table align=center width=420px>
+		<center>
+			<tr>
+				<td>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<table align=center width=400px>
+		<tr>
+			<td align=center width=400px>
+				<center>
+					<td><img class="round" style="width:1000px" src="./resources/attribute_transfer5.png"/></td>
+				</center>
+			</td>
+			
+		</tr>
+	</table>
+	<table align=center width=850px>
+		<center>
+			<tr>
+				<td>
+					
+					<span style="font-size:18px">
+					Qualitative comparison of our method with state-of-the-art facial attribute transfer methods on the CelebA-HQ dataset. 
+					</span>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<hr>
+	
+	<center><h1>The inherent stochasticity</h1></center>
+	<table align=center width=420px>
+		<center>
+			<tr>
+				<td>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<table align=center width=400px>
+		<tr>
+			<td align=center width=400px>
+				<center>
+					<td><img class="round" style="width:1000px" src="./resources/inherent_diversity6.png"/></td>
+				</center>
+			</td>
+			
+		</tr>
+	</table>
+	<table align=center width=850px>
+		<center>
+			<tr>
+				<td>
+					<span style="font-size:18px">
+					<div style="text-align: justify"> 
+					Examples of diverse facial inpaiting with the inherent stochasticity of EXE-GAN. These results show that our method can inherently produce divese results without affecting the exemplar facial attributes of inpainted images. Please zoom-in for more details.
+					</div>
+					</span>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<hr>
+	
+	<center><h1>Style mixing-based diverse inpainting</h1></center>
+	<table align=center width=420px>
+		<center>
+			<tr>
+				<td>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<table align=center width=400px>
+		<tr>
+			<td align=center width=400px>
+				<center>
+					<td><img class="round" style="width:1000px" src="./resources/style-mixing_diversity7.png"/></td>
+				</center>
+			</td>
+			
+		</tr>
+	</table>
+	<table align=center width=850px>
+		<center>
+			<tr>
+				<td>
+				<span style="font-size:18px">
+					Examples of style mixing-based diverse inpainting of EXE-GAN.
+				</span>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<hr>
+	
+	<center><h1>Code-tuning diverse inpainting</h1></center>
+	<table align=center width=420px>
+		<center>
+			<tr>
+				<td>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<table align=center width=400px>
+		<tr>
+			<td align=center width=400px>
+				<center>
+					<td><img class="round" style="width:1000px" src="./resources/code-turning_diversity8.png"/></td>
+				</center>
+			</td>
+			
+		</tr>
+	</table>
+	<table align=center width=850px>
+		<center>
+			<tr>
+				<td>
+					<span style="font-size:18px">
+					Examples of code-tuning diverse inpainting of EXE-GAN.
+					</span>
+				</td>
+			</tr>
+		</center>
+	</table>
+	<hr>
+	
 	<table align=center width=800px>
 		<br>
 		<tr><center>
