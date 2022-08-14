@@ -1,6 +1,8 @@
-# Diverse facial inpainting guided by exemplars (EXE-GAN)
-Official PyTorch implementation of EXE-GAN.
+# Do Inpainting Yourself: Generative Facial Inpainting Guided by Exemplars (EXE-GAN)
+Official PyTorch implementation of EXE-GAN (Coming soon).
 [[Homepage]](https://longlongaaago.github.io/EXE-GAN/)
 
-<div style="text-align: justify"> This paper presents EXE-GAN, a novel diverse and interactive facial inpainting framework, which can not only preserve the high-quality visual effect of the whole image but also complete the face image with exemplar-like facial attributes.</div>
+<div style="text-align: justify"> We present EXE-GAN, a novel exemplar-guided facial inpainting framework using generative adversarial networks. Our
+approach can not only preserve the quality of the input facial image but also complete the image with exemplar-like facial attributes.</div>
+
 
