@@ -120,8 +120,9 @@
 <head>
 	<title>EXE-GAN</title>
 	<meta property="og:image" content="resources/celeba_diverse.png"/> <!-- Facebook automatically scrapes this. Go to https://developers.facebook.com/tools/debug/ if you update and want to force Facebook to rescrape. -->
-	<meta property="og:title" content="Diverse facial inpainting guided by exemplars" />
-	<meta property="og:description" content="Facial image inpainting is a task of filling visually realistic and semantically meaningful contents for missing or masked pixels in a face image. Although existing methods have made significant progress in achieving high visual quality, the controllable diversity of facial image inpainting remains an open problem in this field. This paper presents EXE-GAN, a novel diverse and interactive facial inpainting framework, which can not only preserve the high-quality visual effect of the whole image but also complete the face image with exemplar-like facial attributes. The proposed facial inpainting is achieved based on generative adversarial networks by leveraging the global style of input image, the stochastic style, and the exemplar style of the example image. A novel attribute similarity metric is introduced to encourage networks to learn the style of facial attributes from the exemplar in a self-supervised way. To guarantee the natural transition across the boundary of inpainted regions, a novel spatial variant gradient backpropagation technique is designed to adjust the loss gradients based on the spatial location. A variety of experimental results and comparisons on public CelebA-HQ and FFHQ datasets are conducted to demonstrate the superiority of the proposed method in terms of both the quality and diversity for facial inpainting." />
+	<meta property="og:title" content="Do Inpainting Yourself: Generative Facial Inpainting Guided by Exemplars" />
+	<meta property="og:description" content="We present EXE-GAN, a novel exemplar-guided facial inpainting framework using generative adversarial networks. Our approach can not only preserve the quality of the input facial image but also complete the image with exemplar-like facial attributes. We achieve this by simultaneously leveraging the global style of the input image, the stochastic style generated from the random
+latent code, and the exemplar style of exemplar image. We introduce a novel attribute similarity metric to encourage networks to learn the style of facial attributes from the exemplar in a self-supervised way. To guarantee the natural transition across the boundaries of inpainted regions, we introduce a novel spatial variant gradient backpropagation technique to adjust the loss gradients based on the spatial location. Extensive evaluations and practical applications on public CelebA-HQ and FFHQ datasets validate the superiority of EXE-GAN in terms of the visual quality in facial inpainting." />
 
 	<!-- Get from Google Analytics -->
 	<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -138,7 +139,7 @@
 <body>
 	<br>
 	<center>
-		<span style="font-size:36px">Diverse facial inpainting guided by exemplars</span>
+		<span style="font-size:36px">Do Inpainting Yourself: Generative Facial Inpainting Guided by Exemplars</span>
 		<table align=center width=900px>
 			<table align=center width=900px>
 				<tr>
@@ -160,6 +161,11 @@
 					<td align=center width=200px>
 						<center>
 							<span style="font-size:18px"><a href="http://www.cad.zju.edu.cn/home/jin/">Xiaogang Jin</a></span>
+						</center>
+					</td>
+					<td align=center width=200px>
+						<center>
+							<span style="font-size:18px"><a href="https://www.yongliangyang.net/">Yongliang Yang</a></span>
 						</center>
 					</td>
 					<td align=center width=200px>
@@ -513,8 +519,8 @@
 		<center><h1>Paper and Supplementary Material</h1></center>
 		<tr>
 			<td><a href=""><img class="layered-paper-big" style="height:175px" src="./resources/paper_page10.png"/></a></td>
-			<td><span style="font-size:14pt">Wanglong Lu, Hanli Zhao*, Xianta Jiang, Xiaogang Jin, Min Wang, Jiankai Lyu, and Kaijie Shi.<br>
-				<b>Diverse facial inpainting guided by exemplars </b>
+			<td><span style="font-size:14pt">Wanglong Lu, Hanli Zhao*, Xianta Jiang, Xiaogang Jin, Yongliang Yang, Min Wang, Jiankai Lyu, and Kaijie Shi.<br>
+				<b>Do Inpainting Yourself: Generative Facial Inpainting Guided by Exemplars</b>
 				<!--<br>In Conference, 20XX.<br>-->
 				(hosted on <a href="https://arxiv.org/abs/2202.06358">ArXiv</a>)<br>
 				<!-- (<a href="./resources/camera-ready.pdf">camera ready</a>)<br> -->
