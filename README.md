@@ -16,8 +16,8 @@ Now, we are excited to open-source our work on GitHub.
 We also recognized that there have been some great papers published after ours,
 and we encourage you to check out their projects as well:
 - [Paint by Example](https://arxiv.org/abs/2211.13227), [codes](https://github.com/Fantasy-Studio/Paint-by-Example) (released at Wed, 23 Nov 2022, CVPR 2023 )
-- [Reference-Guided Face Inpainting](https://arxiv.org/abs/2211.13227), [codes](https://github.com/wuyangluo/reffaceinpainting) (released at Mon, 13 Mar 2023, TCSVT 2023)
-- [PATMAT](https://arxiv.org/abs/2211.13227), [codes](https://github.com/humansensinglab/PATMAT) (released at Wed, 12 Apr 2023, ICCV 2023)
+- [Reference-Guided Face Inpainting](https://arxiv.org/abs/2303.07014), [codes](https://github.com/wuyangluo/reffaceinpainting) (released at Mon, 13 Mar 2023, TCSVT 2023)
+- [PATMAT](https://arxiv.org/abs/2304.06107), [codes](https://github.com/humansensinglab/PATMAT) (released at Wed, 12 Apr 2023, ICCV 2023)
 
 ## Requirements 
 ```
