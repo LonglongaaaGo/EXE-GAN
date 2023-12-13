@@ -85,7 +85,7 @@ root/
 
 - Inputs
 
-| <img src="./imgs/exe_guided_recovery/style_mixing/1_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/style_mixing/1_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/style_mixing/1_exe1.png" height=200 width=200 alt=" "> |<img src="./imgs/exe_guided_recovery/style_mixing/1_exe1.png" height=200 width=200 alt=" "> |
+| <img src="./imgs/exe_guided_recovery/style_mixing/1_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/style_mixing/1_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/style_mixing/1_exe1.png" height=200 width=200 alt=" "> |<img src="./imgs/exe_guided_recovery/style_mixing/1_exe2.png" height=200 width=200 alt=" "> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
 |         Ground-truth                      |                      Mask                              | Exemplar 1       | Exemplar 2  | 
 
