@@ -197,6 +197,7 @@ if __name__ == "__main__":
     generator = get_model(args.arch, model_path=args.ckpt, psp_path=args.psp_checkpoint_path)
 
 
+
     for i in tqdm(range(len(exe_imgs))):
         exe_img_ = load_img2tensor(exe_imgs[i],256).to(device)
         gt_img_ = load_img2tensor(gt_imgs[i], 256).to(device)
@@ -206,10 +207,11 @@ if __name__ == "__main__":
         mask_01 = mask_
         completed_img, _, infer_imgs = generator.forward(gt_img_, mask_01,infer_imgs=exe_img_)
 
+        name = str(os.path.basename(exe_imgs[i])).split("_")[0]
         for j, g_img in enumerate(completed_img):
             utils.save_image(
                 g_img.add(1).mul(0.5),
-                f"{str(args.eval_dir)}/{str(i * args.batch + j).zfill(6)}_inpaint.png",
+                f"{str(args.eval_dir)}/{name}_inpaint.png",
                 nrow=int(1),
             )
 
