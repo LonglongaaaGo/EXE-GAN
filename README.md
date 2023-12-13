@@ -78,20 +78,18 @@ root/
 
 
 
-
-
-
-
 ## Exemplar guided style mixing 
 (use our pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
-> python guided_recovery.py --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
+> python exemplar_style_mixing.py --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
 --ckpt  ./checkpoint/EXE_GAN_model.pt  --masked_dir ./imgs/exe_guided_recovery/mask --gt_dir ./imgs/exe_guided_recovery/target --exemplar_dir ./imgs/exe_guided_recovery/exemplar --sample_times 2  
+
+- Inputs
 
 | <img src="./imgs/exe_guided_recovery/style_mixing/1_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/style_mixing/1_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/style_mixing/1_exe1.png" height=200 width=200 alt=" "> |<img src="./imgs/exe_guided_recovery/style_mixing/1_exe1.png" height=200 width=200 alt=" "> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
 |         Ground-truth                      |                      Mask                              | Exemplar 1       | Exemplar 2  | 
 
-- style mixing results
+- Style mixing results
 
 | <img src="./imgs/exe_guided_recovery/mixing_out/1_0_0_inpaint2.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mixing_out/1_1_0_inpaint2.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/mixing_out/1_2_0_inpaint2.png" height=200 width=200 alt=" "> |<img src="./imgs/exe_guided_recovery/mixing_out/1_3_0_inpaint2.png" height=200 width=200 alt=" "> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
