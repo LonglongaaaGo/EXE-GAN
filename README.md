@@ -61,20 +61,46 @@ root/
 ## Exemplar guided facial image recovery 
 (use our pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
 > python guided_recovery.py --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
---ckpt  ./checkpoint/EXE_GAN_model.pt  --masked_dir ./imgs/exe_guided_recovery/mask --gt_dir ./imgs/exe_guided_recovery/target --exemplar_dir ./imgs/exe_guided_recovery/exemplar  
+--ckpt  ./checkpoint/EXE_GAN_model.pt  --masked_dir ./imgs/exe_guided_recovery/mask --gt_dir ./imgs/exe_guided_recovery/target --exemplar_dir ./imgs/exe_guided_recovery/exemplar --sample_times 10  
 
 | <img src="./imgs/exe_guided_recovery/target/1_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mask/1_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/exemplar/1_exe.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/recover_out/1_inpaint.png" height=200 width=200 alt=" "> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
 | <img src="./imgs/exe_guided_recovery/target/2_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mask/2_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/exemplar/2_exe.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/recover_out/2_inpaint.png" height=200 width=200 alt=" "> |
 | <img src="./imgs/exe_guided_recovery/target/3_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mask/3_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/exemplar/3_exe.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/recover_out/3_inpaint.png" height=200 width=200 alt=" "> |
 | <img src="./imgs/exe_guided_recovery/target/4_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mask/4_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/exemplar/4_exe.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/recover_out/4_inpaint.png" height=200 width=200 alt=" "> |
-|          Ground-truth                        |                      Masked                               | Exemplar       | Inpainted  | 
+|          Ground-truth                        |                      Mask                               | Exemplar       | Inpainted  | 
 
-- Inherent diversity
+- Inherent diversity--set ``--sample_times 10``  higher to get more diverse results.
 
 | <img src="./imgs/exe_guided_recovery/diversity/1_0_inpaint.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/diversity/1_1_inpaint.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/diversity/1_2_inpaint.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/diversity/1_3_inpaint.png" height=200 width=200 alt=" "> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
 |          diversity 1                       |                      diversity 2                               | diversity 3       | diversity 4  | 
+
+
+
+
+
+
+
+## Exemplar guided style mixing 
+(use our pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
+> python guided_recovery.py --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
+--ckpt  ./checkpoint/EXE_GAN_model.pt  --masked_dir ./imgs/exe_guided_recovery/mask --gt_dir ./imgs/exe_guided_recovery/target --exemplar_dir ./imgs/exe_guided_recovery/exemplar --sample_times 2  
+
+| <img src="./imgs/exe_guided_recovery/style_mixing/1_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/style_mixing/1_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/style_mixing/1_exe1.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/style_mixing/1_exe1.png" height=200 width=200 alt=" "> |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
+|         Ground-truth                      |                      Mask                              | Exemplar 1       | Exemplar 2  | 
+
+- style mixing results
+
+| <img src="./imgs/exe_guided_recovery/mixing_out/1_0_0_inpaint2.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mixing_out/1_1_0_inpaint2.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/mixing_out/1_2_0_inpaint2.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/mixing_out/1_3_0_inpaint2.png" height=200 width=200 alt=" "> |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
+| <img src="./imgs/exe_guided_recovery/mixing_out/1_4_0_inpaint2.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mixing_out/1_5_0_inpaint2.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/mixing_out/1_6_0_inpaint2.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/mixing_out/1_7_0_inpaint2.png" height=200 width=200 alt=" "> |
+| <img src="./imgs/exe_guided_recovery/mixing_out/1_8_0_inpaint2.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mixing_out/1_9_0_inpaint2.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/mixing_out/1_10_0_inpaint2.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/mixing_out/1_11_0_inpaint2.png" height=200 width=200 alt=" "> |
+| <img src="./imgs/exe_guided_recovery/mixing_out/1_0_0_inpaint.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mixing_out/1_1_0_inpaint.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/mixing_out/1_2_0_inpaint.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/mixing_out/1_3_0_inpaint.png" height=200 width=200 alt=" "> |
+| <img src="./imgs/exe_guided_recovery/mixing_out/1_4_0_inpaint.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mixing_out/1_5_0_inpaint.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/mixing_out/1_6_0_inpaint.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/mixing_out/1_7_0_inpaint.png" height=200 width=200 alt=" "> |
+| <img src="./imgs/exe_guided_recovery/mixing_out/1_8_0 _inpaint.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mixing_out/1_9_0 _inpaint.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/mixing_out/1_10_0 _inpaint.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/mixing_out/1_11_0 _inpaint.png" height=200 width=200 alt=" "> |
+
 
 
 ## Bibtex
