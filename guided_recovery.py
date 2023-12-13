@@ -171,6 +171,8 @@ if __name__ == "__main__":
     parser.add_argument("--masked_dir", type=str, default="./imgs/exe_guided_recovery/mask", help="masked_dir ")
     parser.add_argument("--gt_dir", type=str, default="./imgs/exe_guided_recovery/target", help="gt_dir")
     parser.add_argument("--exemplar_dir", type=str, default="./imgs/exe_guided_recovery/exemplar", help="exemplar_dir")
+    parser.add_argument("--sample_times", type=int, default=10, help="image sizes for the models")
+
 
 
     args = parser.parse_args()
@@ -197,7 +199,6 @@ if __name__ == "__main__":
     generator = get_model(args.arch, model_path=args.ckpt, psp_path=args.psp_checkpoint_path)
 
 
-
     for i in tqdm(range(len(exe_imgs))):
         exe_img_ = load_img2tensor(exe_imgs[i],256).to(device)
         gt_img_ = load_img2tensor(gt_imgs[i], 256).to(device)
@@ -205,13 +206,14 @@ if __name__ == "__main__":
 
         ##get mask
         mask_01 = mask_
-        completed_img, _, infer_imgs = generator.forward(gt_img_, mask_01,infer_imgs=exe_img_)
-
         name = str(os.path.basename(exe_imgs[i])).split("_")[0]
-        for j, g_img in enumerate(completed_img):
-            utils.save_image(
-                g_img.add(1).mul(0.5),
-                f"{str(args.eval_dir)}/{name}_inpaint.png",
-                nrow=int(1),
-            )
+        for jj in range(args.sample_times):
+            completed_img, _, infer_imgs,_ = generator.get_inherent_stoc(gt_img_, mask_01,infer_imgs=exe_img_)
+
+            for j, g_img in enumerate(completed_img):
+                utils.save_image(
+                    g_img.add(1).mul(0.5),
+                    f"{str(args.eval_dir)}/{name}_{jj}_inpaint.png",
+                    nrow=int(1),
+                )
 

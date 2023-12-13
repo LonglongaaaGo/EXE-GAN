@@ -115,9 +115,56 @@ class EXE_GAN():
         return completed_imgs, gin, infer_imgs,img_mask
 
 
+    def latent_mixing(self,latent_a,latent_b,index):
+        """
+        :param latent_a:
+        :param latent_b:
+        :param index: from [0, len(latent_a)].
+        :return:
+        """
+        assert len(latent_a.shape) == len(latent_b.shape)
+        assert index <= latent_b.shape[1] and index>=0
+        latent_new = latent_b.clone().detach()
+        latent_new[:,:index] = latent_a[:,:index].clone().detach()
+        return latent_new
 
+    def mixing_forward(self, real_img, mask_01, infer_imgs_a, infer_imgs_b):
+        """
+        :param gin: torch.tensor =>[b,c,h,w] =>[-1,1]        b=1
+        :param real_img: torch.tensor =>[b,c,h,w] =>[-1,1]
+        :param mask_01: torch.tensor =>[b,1,h,w] =>[0,1]
+        :param infer_imgs_a: torch.tensor =>[b,c,h,w] =>[-1,1]
+        :param infer_imgs_b: torch.tensor =>[b,c,h,w] =>[-1,1]
+        :param device: "cpu" or "cuda"
+        :return:
+        """
+        # real_img
+        # mask_01 =>[1,1,h,w] =>[0,1]
+        # infer_imgs =>[b,c,h,w] =>[-1,1]
+        im_in = real_img * (1 - mask_01)
+        gin = torch.cat((im_in, mask_01 - 0.5), 1).to(self.device)
+        real_img = real_img.to(self.device)
+        mask_01 = mask_01.to(self.device)
+        infer_imgs_a = infer_imgs_a.to(self.device)
+        infer_imgs_b = infer_imgs_b.to(self.device)
 
+        noise = mixing_noise(gin.size(0), self.latent, prob=self.mixing, device=self.device)
 
+        with torch.no_grad():
+            # size [batch,latent_num,512]
+            infer_embeddings_a = self.psp_embedding(infer_imgs_a)
+            infer_embeddings_b = self.psp_embedding(infer_imgs_b)
+
+            out_list = []
+            for jj in range(infer_embeddings_a.shape[1] + 1):
+                # if jj == 3: break
+                mixed_latent = self.latent_mixing(infer_embeddings_a, infer_embeddings_b, jj)
+
+                fake_img = self.generator(gin, mixed_latent, noise)
+                completed_img = get_completion(fake_img, real_img.detach(), mask_01.detach())
+                out_list.append(completed_img)
+            Tensor = torch.cat(out_list, dim=0)
+        return Tensor
 
 
 
