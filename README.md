@@ -65,7 +65,7 @@ root/
 
 
 
-| <img src="./imgs/exe_guided_recovery/target/4_real.png"  height=256 width=256 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mask/4_mask.png" width=256 height=256 alt="Masked "> | <img src="./imgs/exe_guided_recovery/exemplar/4_exe.png" height=256 width=256 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/recover_out/4_inpaint.png" height=256 width=256 alt=" "> |
+| <img src="./imgs/exe_guided_recovery/target/4_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mask/4_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/exemplar/4_exe.png" height=200 width=200 alt="Exemplar"> |<img src="./imgs/exe_guided_recovery/recover_out/4_inpaint.png" height=200 width=200 alt=" inapinted"> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
 |          Ground-truth                        |                      Masked                               | Exemplar       | Inpainted  | 
 
