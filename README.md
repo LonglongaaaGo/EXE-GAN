@@ -63,11 +63,21 @@ root/
 > python guided_recovery.py --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
 --ckpt  ./checkpoint/EXE_GAN_model.pt  --masked_dir ./imgs/exe_guided_recovery/mask --gt_dir ./imgs/exe_guided_recovery/target --exemplar_dir ./imgs/exe_guided_recovery/exemplar  
 
-
-
+| <img src="./imgs/exe_guided_recovery/target/1_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mask/1_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/exemplar/1_exe.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/recover_out/1_inpaint.png" height=200 width=200 alt=" "> |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
+| <img src="./imgs/exe_guided_recovery/target/2_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mask/2_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/exemplar/2_exe.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/recover_out/2_inpaint.png" height=200 width=200 alt=" "> |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
+| <img src="./imgs/exe_guided_recovery/target/3_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mask/3_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/exemplar/3_exe.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/recover_out/3_inpaint.png" height=200 width=200 alt=" "> |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
 | <img src="./imgs/exe_guided_recovery/target/4_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mask/4_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/exemplar/4_exe.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/recover_out/4_inpaint.png" height=200 width=200 alt=" "> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
 |          Ground-truth                        |                      Masked                               | Exemplar       | Inpainted  | 
+
+- Inherent diversity
+
+| <img src="./imgs/exe_guided_recovery/diversity/1_0_inpaint.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/diversity/1_1_inpaint.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/diversity/1_2_inpaint.png" height=200 width=200 alt="Face deblurring"> |<img src="./imgs/exe_guided_recovery/diversity/1_3_inpaint.png" height=200 width=200 alt=" "> |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
+|          diversity 1                       |                      diversity 2                               | diversity 3       | diversity 4  | 
 
 
 ## Bibtex
