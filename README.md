@@ -1,6 +1,7 @@
 # Do Inpainting Yourself: Generative Facial Inpainting Guided by Exemplars (EXE-GAN)
 Official PyTorch implementation of EXE-GAN.
 [[Homepage]](https://longlongaaago.github.io/EXE-GAN/)
+[[paper]](https://arxiv.org/abs/2202.06358)
 
 <div style="text-align: justify"> We present EXE-GAN, a novel exemplar-guided facial inpainting framework using generative adversarial networks. Our
 approach can not only preserve the quality of the input facial image but also complete the image with exemplar-like facial attributes.</div>
@@ -14,7 +15,7 @@ We are thankful for the community's recognition and attention to our project.
 Now, we are excited to open-source our work on GitHub. 
 We also recognized that there have been some great papers published after ours,
 and we encourage you to check out their projects as well:
-- [Paint by Example](https://arxiv.org/abs/2211.13227), [codes](https://github.com/Fantasy-Studio/Paint-by-Example) (released at Wed, 23 Nov 2022, CVPR 2023 )
+- [Paint by Example](https://arxiv.org/abs/2211.13227), [codes](https://github.com/Fantasy-Studio/Paint-by-Example) (released at Wed, 23 Nov 2022, CVPR 2023)
 - [Reference-Guided Face Inpainting](https://arxiv.org/abs/2303.07014), [codes](https://github.com/wuyangluo/reffaceinpainting) (released at Mon, 13 Mar 2023, TCSVT 2023)
 - [PATMAT](https://arxiv.org/abs/2304.06107), [codes](https://github.com/humansensinglab/PATMAT) (released at Wed, 12 Apr 2023, ICCV 2023)
 
