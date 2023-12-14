@@ -11,7 +11,6 @@ approach can not only preserve the quality of the input facial image but also co
 ## Notice
 Our paper was first released at Sun, 13 Feb 2022. 
 We are thankful for the community's recognition and attention to our project.
-Due to a lengthy review process, there has been a delay in sharing our codes. 
 Now, we are excited to open-source our work on GitHub. 
 We also recognized that there have been some great papers published after ours,
 and we encourage you to check out their projects as well:
@@ -31,7 +30,8 @@ pip install -r requirements.txt
 - [x] Pre-trained models
 
 ## Training
-- Prepare your dataset - The folder structure of training and testing data are shown below:  
+- Prepare your dataset (download [FFHQ](https://github.com/NVlabs/ffhq-dataset), and [CelebA-HQ](https://github.com/tkarras/progressive_growing_of_gans))
+- The folder structure of training and testing data are shown below:  
 ```
 root/
     test/
@@ -54,12 +54,12 @@ root/
 --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
 
 ## Testing 
-(use our pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
+(use our FFHQ_60k pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
 > python test.py --path /root/test  --size 256 --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt --ckpt ./checkpoint/EXE_GAN_model.pt
 
 
 ## Exemplar guided facial image recovery 
-(use our pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
+(use our FFHQ_60k pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
 > python guided_recovery.py --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
 --ckpt  ./checkpoint/EXE_GAN_model.pt  --masked_dir ./imgs/exe_guided_recovery/mask --gt_dir ./imgs/exe_guided_recovery/target --exemplar_dir ./imgs/exe_guided_recovery/exemplar --sample_times 10  
 
@@ -70,7 +70,7 @@ root/
 | <img src="./imgs/exe_guided_recovery/target/4_real.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mask/4_mask.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/exemplar/4_exe.png" height=200 width=200 alt=" "> |<img src="./imgs/exe_guided_recovery/recover_out/4_inpaint.png" height=200 width=200 alt=" "> |
 |          Ground-truth                        |                      Mask                               | Exemplar       | Inpainted  | 
 
-- Inherent diversity--set ``--sample_times 10``  higher to get more diverse results.
+- Inherent diversity, set ``--sample_times 10``  higher to get more diverse results.
 
 | <img src="./imgs/exe_guided_recovery/diversity/1_0_inpaint.png"  height=200 width=200 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/diversity/1_1_inpaint.png" width=200 height=200 alt="Masked "> | <img src="./imgs/exe_guided_recovery/diversity/1_2_inpaint.png" height=200 width=200 alt=" "> |<img src="./imgs/exe_guided_recovery/diversity/1_3_inpaint.png" height=200 width=200 alt=" "> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
@@ -79,7 +79,7 @@ root/
 
 
 ## Exemplar guided style mixing 
-(use our pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
+(use our FFHQ_60k pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
 > python exemplar_style_mixing.py --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
 --ckpt  ./checkpoint/EXE_GAN_model.pt  --masked_dir ./imgs/exe_guided_recovery/mask --gt_dir ./imgs/exe_guided_recovery/target --exemplar_dir ./imgs/exe_guided_recovery/exemplar --sample_times 2  
 
