@@ -162,18 +162,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="EXE-GAN guided facial image recovery")
     parser.add_argument('--arch', type=str, default='exe_gan', help='models architectures (co_mod_gan | exe_gan)')
     parser.add_argument("--batch", type=int, default=1, help="batch sizes for each gpu")
-    parser.add_argument("--eval_dir", type=str, default="./mixing_out", help="path to the output the generated images")
     parser.add_argument("--size", type=int, default=256, help="image sizes for the models")
     parser.add_argument("--psp_checkpoint_path", type=str, default="./pre-train/psp_ffhq_encode.pt",help="psp model pretrained model")
     parser.add_argument("--mixing", type=float, default=0.5, help="probability of latent code mixing")
     parser.add_argument("--ckpt", type=str, default="./checkpoint/EXE_GAN_model.pt", help="psp model pretrained model")
 
-    parser.add_argument("--masked_dir", type=str, default="./imgs/exe_guided_recovery/mask", help="masked_dir ")
-    parser.add_argument("--gt_dir", type=str, default="./imgs/exe_guided_recovery/target", help="gt_dir")
-    parser.add_argument("--exemplar_dir", type=str, default="./imgs/exe_guided_recovery/exemplar", help="exemplar_dir")
+    parser.add_argument("--masked_dir", type=str, default="./imgs/exe_guided_recovery/mask", help=" the input  masked_dir ")
+    parser.add_argument("--gt_dir", type=str, default="./imgs/exe_guided_recovery/target",help="the input gt_dir, used for  editing ")
+    parser.add_argument("--exemplar_dir", type=str, default="./imgs/exe_guided_recovery/exemplar", help="exemplar_dir, the exemplar dir, for guiding the editing")
     parser.add_argument("--sample_times", type=int, default=1, help="image sizes for the models")
-
-
+    parser.add_argument("--eval_dir", type=str, default="./mixing_out", help="path to the output the generated images")
 
     args = parser.parse_args()
 

@@ -218,13 +218,14 @@ def eval_(args, generator, device,eval_dict,):
     )
 
     mask_shapes = [128,128]
-    iter_num = int(args.sample_num/args.batch)
+    # iter_num = int(args.sample_num/args.batch)
     main_mae,main_psnr,main_ssim,main_fid_value, main_U_IDS_score, main_P_IDS_score=0,0,0,0,0,0
     with torch.no_grad():
         generator.generator.eval()
         for i, datas in tqdm(enumerate(loader)):
             torch.cuda.empty_cache()
-            if i > iter_num: break
+            # if i > iter_num: break
+            if i>10 and args.debug == True: break
 
             real_imgs = datas.to(device)
 
