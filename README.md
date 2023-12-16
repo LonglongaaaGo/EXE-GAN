@@ -2,6 +2,8 @@
 Official PyTorch implementation of EXE-GAN.
 [[Homepage]](https://longlongaaago.github.io/EXE-GAN/)
 [[paper]](https://arxiv.org/abs/2202.06358)
+[[demo_youtube]](https://www.youtube.com/watch?v=nNEc94hgjtk)
+[[demo_bilibili]](https://www.bilibili.com/video/BV14V4y1s7rz/?share_source=copy_web&vd_source=6fb8e0068d30286602ee8ea389f82ce4)
 
 <div style="text-align: justify"> We present EXE-GAN, a novel exemplar-guided facial inpainting framework using generative adversarial networks. Our
 approach can not only preserve the quality of the input facial image but also complete the image with exemplar-like facial attributes.</div>
@@ -54,8 +56,22 @@ root/
 --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
 
 ## Testing 
-(use our FFHQ_60k pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
+- [Irregular masks](https://nv-adlr.github.io/publication/partialconv-inpainting) (optional, if you would like to test on irregular masks, download Testing Set masks)
+- (use our FFHQ_60k pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
 > python test.py --path /root/test  --size 256 --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt --ckpt ./checkpoint/EXE_GAN_model.pt
+--mask_root ./dataset/mask/testing_mask_dataset
+--mask_file_root ./dataset/mask
+--mask_type test_6.txt
+
+```
+- mask_root Irregular masks root
+- mask_file_root file name list file folder
+- mask_type could be ["center", "test_2.txt", "test_3.txt", "test_4.txt", "test_5.txt", "test_6.txt", "all"]
+```
+- If you don't have irregular masks, just using center masks is also fine.
+> python test.py --path /root/test  --size 256 --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt --ckpt ./checkpoint/EXE_GAN_model.pt
+--mask_type center
+
 
 
 ## Exemplar guided facial image recovery 

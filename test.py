@@ -11,7 +11,7 @@ from pytorch_fid import fid_score
 from models.exe_gan import Generator
 from Loss.psp_embedding import Psp_Embedding,embedding_loss
 from train import  mixing_noise
-
+import os
 
 
 class EXE_GAN():
@@ -196,7 +196,7 @@ def sample_data(loader):
             yield batch
 
 
-def eval_(args, generator, device,eval_dict,):
+def eval_(args, generator, device,mask_root,mask_file,eval_dict,):
 
     transform = transforms.Compose(
         [
@@ -205,10 +205,10 @@ def eval_(args, generator, device,eval_dict,):
         ]
     )
 
-    if args.mask_root != "":
-        dataset = ImageFolder_with_mask(args.path, args.mask_root, args.mask_file, transform)
+    if mask_file != "":
+        dataset = ImageFolder_with_mask(args.path, mask_root, mask_file, transform,exe_root=args.exe_path)
     else:
-        dataset = ImageFolder(root=args.path, transform=transform)
+        dataset = ImageFolder(root=args.path, transform=transform,exe_root=args.exe_path)
 
     loader = data.DataLoader(
         dataset,
@@ -216,21 +216,31 @@ def eval_(args, generator, device,eval_dict,):
         sampler=data_sampler(dataset, shuffle=False, distributed=False),
         drop_last=True,
     )
-
     mask_shapes = [128,128]
     # iter_num = int(args.sample_num/args.batch)
-    main_mae,main_psnr,main_ssim,main_fid_value, main_U_IDS_score, main_P_IDS_score=0,0,0,0,0,0
+
     with torch.no_grad():
         generator.generator.eval()
         for i, datas in tqdm(enumerate(loader)):
             torch.cuda.empty_cache()
             # if i > iter_num: break
             if i>10 and args.debug == True: break
+            if mask_file != "":  # if we give the masks
+                real_imgs, mask_01, exemplar = datas
+                real_imgs = real_imgs.to(device)
+                mask_01 = mask_01.to(device)
+                im_ins = real_imgs * (1 - mask_01)
+            else:
+                real_imgs,exemplar = datas
+                real_imgs = real_imgs.to(device)
+                exemplar = exemplar.to(device)
 
-            real_imgs = datas.to(device)
+                gin, gt_local, mask, mask_01, im_ins = get_mask(real_imgs, mask_type="center", im_size=args.size,mask_shapes=mask_shapes)
 
-            gin, gt_local, mask, mask_01, im_ins = get_mask(real_imgs, mask_type="stroke_rect", im_size=args.size,mask_shapes=mask_shapes)
-            completed_img, _, infer_imgs = generator.forward(real_imgs, mask_01)
+            if args.exe_path is None:
+                completed_img, _, infer_imgs = generator.forward(real_imgs, mask_01)
+            else:
+                completed_img, _, infer_imgs = generator.forward(real_imgs, mask_01,infer_imgs=exemplar)
 
             for j, g_img in enumerate(completed_img):
                 utils.save_image(
@@ -280,12 +290,6 @@ def eval_(args, generator, device,eval_dict,):
     print("mae:%g,psnr:%g,ssim:%g,fid:%g" % (out_dic['mae'], out_dic['psnr'], out_dic['ssim'], fid_value))
 
 
-    print("Main!!!mae:%g,psnr:%g,ssim:%g,fid:%g,U_IDS:%g,P_IDS:%g" %
-          (main_mae, main_psnr, main_ssim, main_fid_value,main_U_IDS_score,main_P_IDS_score))
-
-
-
-
 
 
 def get_model(name,model_path,psp_path):
@@ -301,8 +305,10 @@ def eval_all():
 
     parser = argparse.ArgumentParser(description="EXE-GAN tester")
 
-    parser.add_argument("--path", type=str, help="path to the lmdb dataset")
-    parser.add_argument('--arch', type=str, default='exe_gan', help='models architectures (co_mod_gan | exe_gan)')
+    parser.add_argument("--path", type=str, help="path to the ground-truth images")
+    parser.add_argument("--exe_path", type=str, default=None, help="path to the exemplar images")
+
+    parser.add_argument('--arch', type=str, default='exe_gan', help='models architectures (exe_gan)')
     parser.add_argument(
         "--batch", type=int, default=16, help="batch sizes for each gpu"
     )
@@ -318,23 +324,38 @@ def eval_all():
     parser.add_argument(
         "--size", type=int, default=256, help="image sizes for the models"
     )
-
+    parser.add_argument("--debug",type=bool,default=False,help = "for debugging")
     parser.add_argument("--psp_checkpoint_path", type=str, default="./pre-train/psp_ffhq_encode.pt", help="psp model pretrained model")
     parser.add_argument("--mixing", type=float, default=0.5, help="probability of latent code mixing")
     parser.add_argument("--ckpt", type=str, default="./checkpoint/EXE_GAN_model.pt", help="psp model pretrained model")
 
     # if masked image is not provided, the mask will be generated automatically
     parser.add_argument("--mask_root", type=str, default="",
-                        help="example:/home/k/Data/mask/mask root for the irregualr masks")
-    parser.add_argument("--mask_file", type=str, default="", help="file names for the irregualr masks")
+                        help=" mask root for the irregualr masks")
+    parser.add_argument("--mask_file_root", type=str, default="", help="file names for the irregualr masks")
+    parser.add_argument("--mask_type", type=str, default="center", help=" mask type: [center,test_2.txt,test_3.txt,test_4.txt,test_5.txt,test_6.txt] ")
 
     args = parser.parse_args()
 
     delete_dirs(args.eval_dir)
     mkdirs(args.eval_dir)
 
+    if args.mask_type == "all":
+        mask_types = ["center", "test_2.txt", "test_3.txt", "test_4.txt", "test_5.txt", "test_6.txt", ]
+    else:
+        mask_types = [args.mask_type, ]
+
     generator = get_model(args.arch, model_path=args.ckpt, psp_path=args.psp_checkpoint_path)
-    eval_(args, generator, device, args.eval_dir)
+    for mask_type_ in mask_types:
+        eval_dict_ = os.path.join(args.eval_dir,mask_type_)
+        delete_dirs(eval_dict_)
+        mkdirs(eval_dict_)
+
+        if mask_type_ == "center":
+            mask_file = ""
+        else:
+            mask_file = os.path.join(args.mask_file_root,mask_type_)
+        eval_(args, generator, device,args.mask_root,mask_file, eval_dict_)
 
 
 if __name__ == "__main__":

@@ -94,27 +94,51 @@ class MultiResolution_mask_Dataset(Dataset):
 
 class  ImageFolder(Dataset):
     """docstring for ArtDataset"""
-    def __init__(self, root, transform=None,im_size=(256,256)):
+    def __init__(self, root, transform=None, exe_root=None, im_size=(256,256)):
         """
-        :param root:
-        :param transform:
+        :param root:  img root
+        :param transform: img transform
+        :param exe_root: exemplar path, could be None
         :param im_size:  (h,w)
         """
         super( ImageFolder, self).__init__()
         self.root = root
 
-        self.frame = self._parse_frame()
+        self.frame = self._parse_frame(self.root)
         self.transform = transform
         self.im_size = im_size
-    def _parse_frame(self):
+
+        self.exe_root = exe_root
+        self.exe_frame = []
+        if self.exe_root is not None:
+            self.exe_frame = self._parse_frame(self.exe_root)
+
+    def _parse_frame(self,root):
         frame = []
-        img_names = os.listdir(self.root)
+        img_names = os.listdir(root)
         img_names.sort()
         for i in range(len(img_names)):
-            image_path = os.path.join(self.root, img_names[i])
+            image_path = os.path.join(root, img_names[i])
             if image_path[-4:] == '.JPG' or image_path[-4:] == '.jpg' or image_path[-4:] == '.png' or image_path[-5:] == '.jpeg':
                 frame.append(image_path)
         return frame
+
+    def resize_fun(self, img):
+        w, h = img.size
+
+        if h != self.im_size[0] or w != self.im_size[1]:
+            ratio = max(1.0 * self.im_size[0] / h, 1.0 * self.im_size[1] / w)
+            new_w = int(ratio * w)
+            new_h = int(ratio * h)
+            img_scaled = img.resize((new_w, new_h), Image.ANTIALIAS)
+            h_rang = new_h - self.im_size[0]
+            w_rang = new_w - self.im_size[1]
+            h_idx = 0
+            w_idx = 0
+            if h_rang > 0: h_idx = random.randint(0, h_rang)
+            if w_rang > 0: w_idx = random.randint(0, w_rang)
+            img = img_scaled.crop((w_idx, h_idx, int(w_idx + self.im_size[1]), int(h_idx + self.im_size[0])))
+        return img
 
     def __len__(self):
         return len(self.frame)
@@ -122,30 +146,22 @@ class  ImageFolder(Dataset):
     def __getitem__(self, idx):
         file = self.frame[idx]
         img = Image.open(file).convert('RGB')
-        w,h = img.size
-        # plt.imshow(img)
-        # plt.show()
 
-        if h != self.im_size[0] or w != self.im_size[1]:
-            ratio = max(1.0 * self.im_size[0] / h, 1.0 * self.im_size[1] / w)
-            new_w = int(ratio * w)
-            new_h = int(ratio * h)
-            img_scaled = img.resize((new_w,new_h),Image.ANTIALIAS)
-            h_rang = new_h - self.im_size[0]
-            w_rang = new_w - self.im_size[1]
-            h_idx = 0
-            w_idx = 0
-            if h_rang>0: h_idx = random.randint(0,h_rang)
-            if w_rang > 0: w_idx = random.randint(0, w_rang)
-            img = img_scaled.crop((w_idx,h_idx,int(w_idx+self.im_size[1]),int(h_idx+self.im_size[0])))
-        # img.show()
-        # plt.imshow(img)
-        # plt.show()
-
+        img = self.resize_fun(img)
         if self.transform:
             img = self.transform(img)
 
-        return img
+        ### exe image
+        exe_img = img
+        if len(self.exe_frame) != 0:
+            exe_file = self.exe_frame[idx]
+            exe_img = Image.open(exe_file).convert('RGB')
+
+            exe_img = self.resize_fun(exe_img)
+            if self.transform:
+                exe_img = self.transform(exe_img)
+
+        return img,exe_img
 
 
 def dilate_demo(d_image):
@@ -269,11 +285,12 @@ class ImageFolder_with_edges(Dataset):
 
 class ImageFolder_with_mask(Dataset):
     """docstring for ArtDataset"""
-    def __init__(self, root, mask_root,mask_file,transform=None,im_size=(256,256)):
+    def __init__(self, root, mask_root,mask_file,transform=None,exe_root=None,im_size=(256,256)):
         """
         :param root: root for the images
         :param mask_root: root for the masks
         :param transform:
+        :param exe_root: exemplar path, could be None
         :param im_size:  (h,w)
         """
         super(ImageFolder_with_mask, self).__init__()
@@ -281,10 +298,15 @@ class ImageFolder_with_mask(Dataset):
         self.mask_root = mask_root
         self.mask_file = mask_file
         self._get_mask_list()
-        self.frame = self._parse_frame()
+        self.frame = self._parse_frame(self.root)
 
         self.transform = transform
         self.im_size = im_size
+
+        self.exe_root = exe_root
+        self.exe_frame = []
+        if self.exe_root is not None:
+            self.exe_frame = self._parse_frame(self.exe_root)
 
     def _get_mask_list(self):
         mask_list = []
@@ -298,12 +320,12 @@ class ImageFolder_with_mask(Dataset):
         mask_list.sort()
         self.mask_list = mask_list
 
-    def _parse_frame(self):
+    def _parse_frame(self,root):
         frame = []
-        img_names = os.listdir(self.root)
+        img_names = os.listdir(root)
         img_names.sort()
         for i in range(len(img_names)):
-            image_path = os.path.join(self.root, img_names[i])
+            image_path = os.path.join(root, img_names[i])
             if image_path[-4:] == '.JPG' or image_path[-4:] == '.jpg' or image_path[-4:] == '.png' or image_path[-5:] == '.jpeg':
                 frame.append(image_path)
         return frame
@@ -311,26 +333,9 @@ class ImageFolder_with_mask(Dataset):
     def __len__(self):
         return len(self.frame)
 
-    def __getitem__(self, idx):
-        file = self.frame[idx]
-        img = Image.open(file).convert('RGB')
 
-        mask_idx = np.random.randint(0,len(self.mask_list)-1)
-        mask_path = self.mask_list[mask_idx]
-        mask_img = Image.open(mask_path).convert('P')
-
+    def resize_fun(self,img):
         w,h = img.size
-
-        mask_img = mask_img.resize((w,h),Image.NEAREST)
-        # plt.imshow(mask_img)
-        # plt.show()
-
-        mask_img = np.array(mask_img)
-        if mask_img.ndim == 2:
-            mask = np.expand_dims(mask_img, axis=0)
-        else:
-            mask = mask_img[0:1, :, :]
-        mask[mask > 0] = 1.0
 
         if h != self.im_size[0] or w != self.im_size[1]:
             ratio = max(1.0 * self.im_size[0] / h, 1.0 * self.im_size[1] / w)
@@ -344,11 +349,45 @@ class ImageFolder_with_mask(Dataset):
             if h_rang>0: h_idx = random.randint(0,h_rang)
             if w_rang > 0: w_idx = random.randint(0, w_rang)
             img = img_scaled.crop((w_idx,h_idx,int(w_idx+self.im_size[1]),int(h_idx+self.im_size[0])))
-        # img.show()
-        # plt.imshow(img)
+        return img
+
+
+    def __getitem__(self, idx):
+        file = self.frame[idx]
+        img = Image.open(file).convert('RGB')
+        w,h = img.size
+
+        mask_idx = idx% len(self.mask_list)
+        mask_path = self.mask_list[mask_idx]
+        mask_img = Image.open(mask_path).convert('P')
+
+        mask_img = mask_img.resize((w,h),Image.NEAREST)
+        # plt.imshow(mask_img)
         # plt.show()
 
+        mask_img = np.array(mask_img)
+        if mask_img.ndim == 2:
+            mask = np.expand_dims(mask_img, axis=0)
+        else:
+            mask = mask_img[0:1, :, :]
+        mask[mask > 0] = 1.0
+
+
+        img = self.resize_fun(img)
         if self.transform:
             img = self.transform(img)
 
-        return img,mask
+        ### exe image
+        exe_img = img
+        if len(self.exe_frame) != 0:
+            exe_file = self.exe_frame[idx]
+            exe_img = Image.open(exe_file).convert('RGB')
+
+            exe_img = self.resize_fun(exe_img)
+            if self.transform:
+                exe_img = self.transform(exe_img)
+
+        return img,mask,exe_img
+
+
+
