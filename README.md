@@ -142,7 +142,7 @@ root/
   ```
 
 
-## License
+## Acknowledgements
 
 Model details and custom CUDA kernel codes are from official repostiories: https://github.com/NVlabs/stylegan2
 
