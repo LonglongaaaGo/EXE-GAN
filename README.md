@@ -136,6 +136,12 @@ root/
 | <img src="./imgs/exe_guided_recovery/mixing_out/1_4_0_inpaint.png"  height=180 width=180 alt="Ground-truth"> | <img src="./imgs/exe_guided_recovery/mixing_out/1_5_0_inpaint.png" width=180 height=180 alt="Masked "> | <img src="./imgs/exe_guided_recovery/mixing_out/1_6_0_inpaint.png" height=180 width=180 alt=" "> |<img src="./imgs/exe_guided_recovery/mixing_out/1_7_0_inpaint.png" height=180 width=180 alt=" "> |
 
 
+## Editing masks by yourself 
+![gen_mask](./imgs/Mask_gen.gif)
+We also uploaded the mask editing tool. 
+You can try this tool to generate your masks for editing.
+> python mask_gui.py
+
 
 ## Bibtex
 - If you find our code useful, please cite our paper:
