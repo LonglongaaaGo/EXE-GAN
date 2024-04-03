@@ -138,6 +138,7 @@ root/
 
 ## Editing masks by yourself 
 ![gen_mask](./imgs/Mask_gen.gif)
+
 We also uploaded the mask editing tool. 
 You can try this tool to generate your masks for editing.
 > python mask_gui.py
