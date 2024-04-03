@@ -12,7 +12,7 @@ approach can not only preserve the quality of the input facial image but also co
 
 
 ## Notice
-Our paper was first released at Sun, 13 Feb 2022. 
+Our paper was first released on Sun, 13 Feb 2022. 
 We are thankful for the community's recognition and attention to our project.
 We also recognized that there have been some great papers published after ours,
 and we encourage you to check out their projects as well:
@@ -33,7 +33,7 @@ pip install -r requirements.txt
 
 ## Training
 - Prepare your dataset (download [FFHQ](https://github.com/NVlabs/ffhq-dataset), and [CelebA-HQ](https://github.com/tkarras/progressive_growing_of_gans))
-- The folder structure of training and testing data are shown below:  
+- The folder structure of training and testing data is shown below:  
 ```
 root/
     test/
@@ -74,7 +74,7 @@ root/
 
 
 
-## Exemplar guided facial image recovery 
+## Exemplar-guided facial image recovery 
 (use our FFHQ_60k pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
 > python guided_recovery.py --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
 --ckpt  ./checkpoint/EXE_GAN_model.pt  --masked_dir ./imgs/exe_guided_recovery/mask --gt_dir ./imgs/exe_guided_recovery/target --exemplar_dir ./imgs/exe_guided_recovery/exemplar --sample_times 10
@@ -144,7 +144,7 @@ root/
 
 ## Acknowledgements
 
-Model details and custom CUDA kernel codes are from official repostiories: https://github.com/NVlabs/stylegan2
+Model details and custom CUDA kernel codes are from official repositories: https://github.com/NVlabs/stylegan2
 
 Codes for Learned Perceptual Image Patch Similarity, LPIPS came from https://github.com/richzhang/PerceptualSimilarity
 
