@@ -167,9 +167,9 @@ if __name__ == "__main__":
     parser.add_argument("--mixing", type=float, default=0.5, help="probability of latent code mixing")
     parser.add_argument("--ckpt", type=str, default="./checkpoint/EXE_GAN_model.pt", help="psp model pretrained model")
 
-    parser.add_argument("--masked_dir", type=str, default="./imgs/exe_guided_recovery/mask", help=" the input  masked_dir ")
-    parser.add_argument("--gt_dir", type=str, default="./imgs/exe_guided_recovery/target",help="the input gt_dir, used for  editing ")
-    parser.add_argument("--exemplar_dir", type=str, default="./imgs/exe_guided_recovery/exemplar", help="exemplar_dir, the exemplar dir, for guiding the editing")
+    parser.add_argument("--masked_dir", type=str, default="./imgs/exe_guided_recovery/style_mixing", help=" the input  masked_dir ")
+    parser.add_argument("--gt_dir", type=str, default="./imgs/exe_guided_recovery/style_mixing",help="the input gt_dir, used for  editing ")
+    parser.add_argument("--exemplar_dir", type=str, default="./imgs/exe_guided_recovery/style_mixing", help="exemplar_dir, the exemplar dir, for guiding the editing")
     parser.add_argument("--sample_times", type=int, default=1, help="image sizes for the models")
     parser.add_argument("--eval_dir", type=str, default="./mixing_out", help="path to the output the generated images")
 
@@ -180,9 +180,9 @@ if __name__ == "__main__":
 
     set_random_seed(1)
 
-    args.masked_dir = "./imgs/exe_guided_recovery/style_mixing"
-    args.gt_dir = "./imgs/exe_guided_recovery/style_mixing"
-    args.exemplar_dir = "./imgs/exe_guided_recovery/style_mixing"
+    #args.masked_dir = "./imgs/exe_guided_recovery/style_mixing"
+    #args.gt_dir = "./imgs/exe_guided_recovery/style_mixing"
+    #args.exemplar_dir = "./imgs/exe_guided_recovery/style_mixing"
 
     gt_post = "_real.png"
     mask_post = "_mask.png"
