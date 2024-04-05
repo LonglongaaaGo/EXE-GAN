@@ -180,9 +180,9 @@ if __name__ == "__main__":
 
     set_random_seed(1)
 
-    #args.masked_dir = "./imgs/exe_guided_recovery/style_mixing"
-    #args.gt_dir = "./imgs/exe_guided_recovery/style_mixing"
-    #args.exemplar_dir = "./imgs/exe_guided_recovery/style_mixing"
+    ## args.masked_dir = "./imgs/exe_guided_recovery/style_mixing"
+    ## args.gt_dir = "./imgs/exe_guided_recovery/style_mixing"
+    ## args.exemplar_dir = "./imgs/exe_guided_recovery/style_mixing"
 
     gt_post = "_real.png"
     mask_post = "_mask.png"
