@@ -209,7 +209,7 @@ if __name__ == "__main__":
         mask_01 = mask_
         name = str(os.path.basename(exe_imgs_1[i])).split("_")[0]
         for jj in range(args.sample_times):
-            # completed_img, _, infer_imgs,_ = generator.get_inherent_stoc(gt_img_, mask_01,infer_imgs=exe_img_)
+            # completed_img, _, infer_imgs,_ = generator.get_inherent_stoc(gt_img_, mask_01,infer_imgs=exe_img_1)
             completed_img = generator.mixing_forward(gt_img_, mask_01, exe_img_1, exe_img_2)
 
             for j, g_img in enumerate(completed_img):
