@@ -247,7 +247,9 @@ def train(args, loader,test_loader, generator, discriminator, g_optim, d_optim, 
         gin, gt_local, mask, mask_01, im_in = get_mask(real_img, mask_type="stroke_rect", im_size=args.size, mask_shapes=mask_shapes)
         # gin, mask_01, im_in = co_mod_mask(real_img, im_size=(args.size, args.size))
 
+        # confidence weight mask
         mask_weight = confidence_mask_layer(mask_01)
+        # reverse weight mask
         ada_embedding_mask = (1.0- mask_weight)*mask_01
         ada_embedding_mask = (ada_embedding_mask- torch.min(ada_embedding_mask))/(torch.max(ada_embedding_mask) - torch.min(ada_embedding_mask))
 
