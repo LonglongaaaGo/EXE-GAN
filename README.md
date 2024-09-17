@@ -50,10 +50,19 @@ root/
 [psp_ffhq_encode.pt](https://drive.google.com/file/d/1_GdbsT1A5dyxF0FqOEiFlmouVsyf7Ag1/view?usp=drive_link) (put models in ./pre-train)
 
 
-- Training
+- Training for 256X256 images
 > python train.py --path /root/train --test_path /root/test
 --size 256 --embedding_weight 0.1 --id_loss_weight 0.1 --percept_loss_weight 0.5 --arcface_path ./pre-train/Arcface.pth
 --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
+
+- Training for 512X512 images using larger masks
+> python train_largeMask.py --path /root/train --test_path /root/test
+--size 256 --embedding_weight 0.1 --id_loss_weight 0.1 --percept_loss_weight 0.5 --arcface_path ./pre-train/Arcface.pth
+--psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt
+
+- We found that the previous mask configuration for training 256X256 images is not appropriate for training 512X512 images.
+- So we use co-mod gan mask for training, which is plugged in the train_largeMask.py 
+
 
 ## Testing 
 #### Notice 
