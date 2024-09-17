@@ -70,6 +70,7 @@ root/
 - mask_root Irregular masks root
 - mask_file_root file name list file folder
 - mask_type could be ["center", "test_2.txt", "test_3.txt", "test_4.txt", "test_5.txt", "test_6.txt", "all"]
+- size 256 for 256X256 images and  512 for  512X512 images
 ```
 - If you don't have irregular masks, just using center masks is also fine.
 > python test.py --path /root/test  --size 256 --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt --ckpt ./checkpoint/EXE_GAN_model.pt
@@ -120,6 +121,7 @@ root/
 - gt_dir: the input gt_dir, used for  editing 
 - exemplar_dir: exemplar_dir, the exemplar dir, for guiding the editing
 - eval_dir: output dir
+- size 256 for 256X256 images and  512 for  512X512 images
 ```
 - Inputs are shown below:
 
