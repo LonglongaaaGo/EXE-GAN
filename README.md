@@ -60,7 +60,7 @@ root/
 - For editing images from the web, photos should be aligned by face landmarks and cropped to 256x256 by [align_face](https://github.com/ZPdesu/Barbershop/blob/main/align_face.py).
 
 - [Irregular masks](https://nv-adlr.github.io/publication/partialconv-inpainting) (optional, if you would like to test on irregular masks, download Testing Set masks)
-- (use our FFHQ_60k pre-trained model [EXE_GAN_model.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) or trained *pt file by yourself.)
+- (use our FFHQ_60k pre-trained model [EXE_GAN_model_256.pt](https://drive.google.com/file/d/1y7ThKBXL7QK7CPtvT3KICeNOu1T2xlCA/view?usp=drive_link) and [EXE_GAN_model_512.pt](https://drive.google.com/file/d/1Zq2XrXUQfKBYeRINfZ-_LuxuB5Z-iXdF/view?usp=drive_link) or trained *pt file by yourself.)
 > python test.py --path /root/test  --size 256 --psp_checkpoint_path ./pre-train/psp_ffhq_encode.pt --ckpt ./checkpoint/EXE_GAN_model.pt
 --mask_root ./dataset/mask/testing_mask_dataset
 --mask_file_root ./dataset/mask
