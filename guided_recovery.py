@@ -182,27 +182,21 @@ if __name__ == "__main__":
 
     set_random_seed(1)
 
-    args.masked_dir = "./imgs/exe_guided_recovery/mask"
-    args.gt_dir = "./imgs/exe_guided_recovery/target"
-    args.exemplar_dir = "./imgs/exe_guided_recovery/exemplar"
-
-    gt_post = "_real.png"
-    mask_post = "_mask.png"
-    exe_post= "_exe.png"
-
+    gt_post = ".png"
+    mask_post = ".png"
+    exe_post = ".png"
     # os.makedirs(out_root,exist_ok=True)
     gt_imgs = get_img_lists(args.gt_dir, gt_post)
     mask_imgs = get_img_lists(args.masked_dir, mask_post)
     exe_imgs = get_img_lists(args.exemplar_dir, exe_post)
 
 
-    generator = get_model(args.arch, model_path=args.ckpt, psp_path=args.psp_checkpoint_path)
-
+    generator = get_model(args, model_path=args.ckpt, psp_path=args.psp_checkpoint_path)
 
     for i in tqdm(range(len(exe_imgs))):
-        exe_img_ = load_img2tensor(exe_imgs[i],256).to(device)
-        gt_img_ = load_img2tensor(gt_imgs[i], 256).to(device)
-        mask_ = load_mask2tensor(mask_imgs[i], 256).to(device)
+        exe_img_ = load_img2tensor(exe_imgs[i],args.size).to(device)
+        gt_img_ = load_img2tensor(gt_imgs[i], args.size).to(device)
+        mask_ = load_mask2tensor(mask_imgs[i], args.size).to(device)
 
         ##get mask
         mask_01 = mask_
@@ -210,10 +204,8 @@ if __name__ == "__main__":
         for jj in range(args.sample_times):
             completed_img, _, infer_imgs,_ = generator.get_inherent_stoc(gt_img_, mask_01,infer_imgs=exe_img_)
 
-            for j, g_img in enumerate(completed_img):
-                utils.save_image(
-                    g_img.add(1).mul(0.5),
-                    f"{str(args.eval_dir)}/{name}_{jj}_inpaint.png",
-                    nrow=int(1),
-                )
-
+            utils.save_image(
+                completed_img.add(1).mul(0.5),
+                f"{str(args.eval_dir)}/{name}_{jj}_inpaint.png",
+                nrow=int(1),
+            )

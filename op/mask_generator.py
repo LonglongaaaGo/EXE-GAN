@@ -191,6 +191,11 @@ def co_mod_mask(real_image,im_size=()):
     return gin,mask_01,im_in
 
 
+def co_mod_mask_only(batch_size,im_size=(),device="cuda"):
+    #only our put the mask
+    mask_10 = BatchRandomMask(batch_size, im_size,max_size=im_size, hole_range=[0, 1])
+    mask_01 = 1 - torch.from_numpy(mask_10).to(device)
+    return mask_01
 
 
 def co_mod_quarter_mask(real_image,im_size):

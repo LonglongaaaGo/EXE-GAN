@@ -7,7 +7,10 @@ from torch.autograd import Function
 from torch.utils.cpp_extension import load
 
 
+# module_path = os.path.dirname(__file__)
 module_path = os.path.dirname(__file__)
+build_directory_path = os.path.join(module_path,"cache_upfirdn2d")
+os.makedirs(build_directory_path,exist_ok=True)
 upfirdn2d_op = load(
     "upfirdn2d",
     sources=[

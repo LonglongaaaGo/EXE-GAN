@@ -180,9 +180,9 @@ if __name__ == "__main__":
 
     set_random_seed(1)
 
-    ## args.masked_dir = "./imgs/exe_guided_recovery/style_mixing"
-    ## args.gt_dir = "./imgs/exe_guided_recovery/style_mixing"
-    ## args.exemplar_dir = "./imgs/exe_guided_recovery/style_mixing"
+    # args.masked_dir = "./imgs/exe_guided_recovery/style_mixing"
+    # args.gt_dir = "./imgs/exe_guided_recovery/style_mixing"
+    # args.exemplar_dir = "./imgs/exe_guided_recovery/style_mixing"
 
     gt_post = "_real.png"
     mask_post = "_mask.png"
@@ -196,20 +196,20 @@ if __name__ == "__main__":
     exe_imgs_2 = get_img_lists(args.exemplar_dir, exe2_post)
 
 
-    generator = get_model(args.arch, model_path=args.ckpt, psp_path=args.psp_checkpoint_path)
+    generator = get_model(args, model_path=args.ckpt, psp_path=args.psp_checkpoint_path)
 
     for i in tqdm(range(len(exe_imgs_1))):
-        exe_img_1 = load_img2tensor(exe_imgs_1[i],256).to(device)
-        exe_img_2 = load_img2tensor(exe_imgs_2[i],256).to(device)
+        exe_img_1 = load_img2tensor(exe_imgs_1[i],args.size).to(device)
+        exe_img_2 = load_img2tensor(exe_imgs_2[i],args.size).to(device)
 
-        gt_img_ = load_img2tensor(gt_imgs[i], 256).to(device)
-        mask_ = load_mask2tensor(mask_imgs[i], 256).to(device)
+        gt_img_ = load_img2tensor(gt_imgs[i], args.size).to(device)
+        mask_ = load_mask2tensor(mask_imgs[i], args.size).to(device)
 
         ##get mask
         mask_01 = mask_
         name = str(os.path.basename(exe_imgs_1[i])).split("_")[0]
         for jj in range(args.sample_times):
-            # completed_img, _, infer_imgs,_ = generator.get_inherent_stoc(gt_img_, mask_01,infer_imgs=exe_img_1)
+            # completed_img, _, infer_imgs,_ = generator.get_inherent_stoc(gt_img_, mask_01,infer_imgs=exe_img_)
             completed_img = generator.mixing_forward(gt_img_, mask_01, exe_img_1, exe_img_2)
 
             for j, g_img in enumerate(completed_img):

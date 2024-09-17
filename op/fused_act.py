@@ -8,6 +8,8 @@ from torch.utils.cpp_extension import load
 
 
 module_path = os.path.dirname(__file__)
+build_directory_path = os.path.join(module_path,"cache_fused")
+os.makedirs(build_directory_path,exist_ok=True)
 fused = load(
     "fused",
     sources=[

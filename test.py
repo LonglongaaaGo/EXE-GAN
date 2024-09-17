@@ -3,174 +3,17 @@ import torch
 from torch.utils import data
 from torchvision import transforms, utils
 from tqdm import tqdm
-from op.utils import get_mask,get_completion,mkdirs,delete_dirs
+from op.utils import get_mask,mkdirs,delete_dirs
 from fid_eval import test_matrix
 from dataset import ImageFolder,ImageFolder_with_mask
 
 from pytorch_fid import fid_score
-from models.exe_gan import Generator
-from Loss.psp_embedding import Psp_Embedding,embedding_loss
-from train import  mixing_noise
 import os
-
-
-class EXE_GAN():
-
-    def __init__(self,exe_ckpt_path,psp_ckpt_path,
-                 latent = 512,n_mlp = 8,size = 256,channel_multiplier = 2,psp_start_latent=4,num_psp_latent=10,mixing=0.5,device="cuda"):
-        """
-        :param exe_ckpt_path: EXE GAN checkpoint path
-        :param psp_ckpt_path: pSp checkpoint path
-
-        #### parameters shonw below don't need change
-        :param latent:  latent size
-        :param n_mlp:  the number for the MLP layer
-        :param size:  input size
-        :param channel_multiplier:
-        :param psp_start_latent:
-        :param num_psp_latent:  number of the psp latent
-        :param mixing: probability
-        :param device:  device for GPU
-        """
-        self.latent = latent
-        self.mixing = mixing
-        self.device = device
-        self.generator = Generator(
-            size, latent, n_mlp, channel_multiplier=channel_multiplier,
-            psp_start_latent=psp_start_latent, num_psp_latent=num_psp_latent
-        ).to(device)
-
-        ##init embedding
-        print("start_latent :%d" % psp_start_latent)
-        print("n_psp_latent :%d" % num_psp_latent)
-        self.psp_embedding = Psp_Embedding(psp_ckpt_path, psp_start_latent, num_psp_latent).to(device)
-
-        print("load models:", exe_ckpt_path)
-        ckpt = torch.load(exe_ckpt_path, map_location=lambda storage, loc: storage)
-
-        self.generator.load_state_dict(ckpt["g_ema"])
-
-        self.psp_embedding.eval()
-        self.generator.eval()
-
-    def forward(self,real_imgs,mask_01,infer_imgs=None,truncation=1):
-        """
-        :param real_imgs: with size [b,c,h,w]
-        :param mask_01: with size [b,1,h,w]    masked pixel = 1, others = 0
-        :param infer_imgs:  with size [b,c,h,w] or None
-        :return: inpainted img with size  [b,c,h,w]
-        """
-        #if infer imgs is None,  copy and get flipped batch
-        if infer_imgs == None:
-            infer_imgs = torch.flip(real_imgs, dims=[0])
-        #
-        im_in = real_imgs * (1 - mask_01)
-        gin = torch.cat((im_in, mask_01 - 0.5), 1)
-        # generate noises
-        noise = mixing_noise(real_imgs.shape[0], self.latent, self.mixing, self.device)
-        #embedding
-        infer_embeddings = self.psp_embedding(infer_imgs)
-        #get fake
-        fake_img = self.generator(gin, infer_embeddings, noise,truncation=truncation)
-        #get completed
-        completed_imgs = get_completion(fake_img, real_imgs.detach(), mask_01.detach())
-
-        # img_mask = img*(1-mask) + mask
-        return completed_imgs,gin,infer_imgs
-
-    def psp_score(self,image_a,image_b):
-        a_embedding = self.psp_embedding(image_a)
-        b_embeddings = self.psp_embedding(image_b)
-        embedding_score = embedding_loss(a_embedding, b_embeddings)
-        return embedding_score
-
-
-    def get_inherent_stoc(self,real_imgs,mask_01,infer_imgs=None,truncation=1):
-        """
-                :param real_imgs: with size [b,c,h,w]
-                :param mask_01: with size [b,1,h,w]    masked pixel = 1, others = 0
-                :param infer_imgs:  with size [b,c,h,w] or None
-                :return: inpainted img with size  [b,c,h,w]
-                """
-        # if infer imgs is None,  copy and get flipped batch
-        if infer_imgs == None:
-            infer_imgs = torch.flip(real_imgs, dims=[0])
-        #
-        im_in = real_imgs * (1 - mask_01)
-        gin = torch.cat((im_in, mask_01 - 0.5), 1)
-        # generate noises
-        noise = mixing_noise(real_imgs.shape[0], self.latent, self.mixing, self.device)
-        # embedding
-        infer_embeddings = self.psp_embedding(infer_imgs)
-
-        trunc_latent = self.generator.mean_latent(4096,device=self.device)
-
-        # get fake
-        fake_img = self.generator(gin, infer_embeddings, noise, truncation_latent=trunc_latent,truncation=truncation)
-
-        # get completed
-        completed_imgs = get_completion(fake_img, real_imgs.detach(), mask_01.detach())
-
-        img_mask = real_imgs * (1 - mask_01) + mask_01
-        return completed_imgs, gin, infer_imgs,img_mask
-
-
-    def latent_mixing(self,latent_a,latent_b,index):
-        """
-        :param latent_a:
-        :param latent_b:
-        :param index: from [0, len(latent_a)].
-        :return:
-        """
-        assert len(latent_a.shape) == len(latent_b.shape)
-        assert index <= latent_b.shape[1] and index>=0
-        latent_new = latent_b.clone().detach()
-        latent_new[:,:index] = latent_a[:,:index].clone().detach()
-        return latent_new
-
-    def mixing_forward(self, real_img, mask_01, infer_imgs_a, infer_imgs_b):
-        """
-        :param gin: torch.tensor =>[b,c,h,w] =>[-1,1]        b=1
-        :param real_img: torch.tensor =>[b,c,h,w] =>[-1,1]
-        :param mask_01: torch.tensor =>[b,1,h,w] =>[0,1]
-        :param infer_imgs_a: torch.tensor =>[b,c,h,w] =>[-1,1]
-        :param infer_imgs_b: torch.tensor =>[b,c,h,w] =>[-1,1]
-        :param device: "cpu" or "cuda"
-        :return:
-        """
-        # real_img
-        # mask_01 =>[1,1,h,w] =>[0,1]
-        # infer_imgs =>[b,c,h,w] =>[-1,1]
-        im_in = real_img * (1 - mask_01)
-        gin = torch.cat((im_in, mask_01 - 0.5), 1).to(self.device)
-        real_img = real_img.to(self.device)
-        mask_01 = mask_01.to(self.device)
-        infer_imgs_a = infer_imgs_a.to(self.device)
-        infer_imgs_b = infer_imgs_b.to(self.device)
-
-        noise = mixing_noise(gin.size(0), self.latent, prob=self.mixing, device=self.device)
-
-        with torch.no_grad():
-            # size [batch,latent_num,512]
-            infer_embeddings_a = self.psp_embedding(infer_imgs_a)
-            infer_embeddings_b = self.psp_embedding(infer_imgs_b)
-
-            out_list = []
-            for jj in range(infer_embeddings_a.shape[1] + 1):
-                # if jj == 3: break
-                mixed_latent = self.latent_mixing(infer_embeddings_a, infer_embeddings_b, jj)
-
-                fake_img = self.generator(gin, mixed_latent, noise)
-                completed_img = get_completion(fake_img, real_img.detach(), mask_01.detach())
-                out_list.append(completed_img)
-            Tensor = torch.cat(out_list, dim=0)
-        return Tensor
-
-
-
-
-
-
+from models.exe_gan_model import EXE_GAN
+from models.stylegan2_co_mod_gan import co_mod_GAN
+import random
+import numpy as np
+from op.mask_generator import co_mod_mask_only
 
 
 def data_sampler(dataset, shuffle, distributed):
@@ -181,6 +24,29 @@ def data_sampler(dataset, shuffle, distributed):
 
     else:
         return data.SequentialSampler(dataset)
+
+
+
+def set_random_seed(seed, deterministic=False):
+    """Set random seed.
+
+    Args:
+        seed (int): Seed to be used.
+        deterministic (bool): Whether to set the deterministic option for
+            CUDNN backend, i.e., set `torch.backends.cudnn.deterministic`
+            to True and `torch.backends.cudnn.benchmark` to False.
+            Default: False.
+    """
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    if deterministic:
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
 
 
 def accumulate(model1, model2, decay=0.999):
@@ -205,10 +71,12 @@ def eval_(args, generator, device,mask_root,mask_file,eval_dict,):
         ]
     )
 
-    if mask_file != "":
-        dataset = ImageFolder_with_mask(args.path, mask_root, mask_file, transform,exe_root=args.exe_path)
+    if mask_file == "large_mask":
+        dataset = ImageFolder(root=args.path, transform=transform,exe_root=args.exe_path,im_size=(args.size,args.size))
+    elif mask_file != "":
+        dataset = ImageFolder_with_mask(args.path, mask_root, mask_file, transform,exe_root=args.exe_path,im_size=(args.size,args.size))
     else:
-        dataset = ImageFolder(root=args.path, transform=transform,exe_root=args.exe_path)
+        dataset = ImageFolder(root=args.path, transform=transform,exe_root=args.exe_path,im_size=(args.size,args.size))
 
     loader = data.DataLoader(
         dataset,
@@ -217,86 +85,132 @@ def eval_(args, generator, device,mask_root,mask_file,eval_dict,):
         drop_last=True,
     )
     mask_shapes = [128,128]
-    # iter_num = int(args.sample_num/args.batch)
 
-    with torch.no_grad():
-        generator.generator.eval()
-        for i, datas in tqdm(enumerate(loader)):
-            torch.cuda.empty_cache()
-            # if i > iter_num: break
-            if i>10 and args.debug == True: break
-            if mask_file != "":  # if we give the masks
-                real_imgs, mask_01, exemplar = datas
-                real_imgs = real_imgs.to(device)
-                mask_01 = mask_01.to(device)
-                im_ins = real_imgs * (1 - mask_01)
-            else:
-                real_imgs,exemplar = datas
-                real_imgs = real_imgs.to(device)
-                exemplar = exemplar.to(device)
 
-                gin, gt_local, mask, mask_01, im_ins = get_mask(real_imgs, mask_type="center", im_size=args.size,mask_shapes=mask_shapes)
 
-            if args.exe_path is None:
-                completed_img, _, infer_imgs = generator.forward(real_imgs, mask_01)
-            else:
-                completed_img, _, infer_imgs = generator.forward(real_imgs, mask_01,infer_imgs=exemplar)
+    fid_list = []
+    U_IDS_score_list = []
+    P_IDS_score_list = []
+    mae_list = []
+    psnr_list = []
+    ssim_list = []
+    for jj in range(args.repeat_times):
+        print("++++"*100)
+        print(f"{jj+1}-th  repeat ")
+        set_random_seed(jj)
+        with torch.no_grad():
+            generator.generator.eval()
+            for i, datas in tqdm(enumerate(loader)):
+                torch.cuda.empty_cache()
+                if i>10 and args.debug == True: break
+                if mask_file == "large_mask":
+                    real_imgs, exemplar = datas
+                    real_imgs = real_imgs.to(device)
+                    exemplar = exemplar.to(device)
+                    gin, gt_local, mask, mask_01, im_ins = get_mask(real_imgs, mask_type="stroke_rect", im_size=args.size,mask_shapes=mask_shapes)
+                    # mask_01 = co_mod_mask_only(real_imgs.shape[0], im_size=args.size, device=device)
+                    # im_ins = real_imgs * (1 - mask_01)
+                elif mask_file != "":  # if we give the masks
+                    real_imgs, mask_01, exemplar = datas
+                    real_imgs = real_imgs.to(device)
+                    mask_01 = mask_01.to(device)
+                    im_ins = real_imgs * (1 - mask_01)
 
-            for j, g_img in enumerate(completed_img):
-                utils.save_image(
-                    g_img.add(1).mul(0.5),
-                    f"{str(eval_dict)}/{str(i * args.batch + j).zfill(6)}_inpaint.png",
-                    nrow=int(1),
+                else:
+                    real_imgs,exemplar = datas
+                    real_imgs = real_imgs.to(device)
+                    exemplar = exemplar.to(device)
+
+                    gin, gt_local, mask, mask_01, im_ins = get_mask(real_imgs, mask_type="center", im_size=args.size,mask_shapes=mask_shapes)
+
+                if args.exe_path is None or args.arch == "cmod_gan":
+                    completed_img, _, infer_imgs = generator.forward(real_imgs, mask_01)
+                else:
+                    completed_img, _, infer_imgs = generator.forward(real_imgs, mask_01,infer_imgs=exemplar)
+
+                for j, g_img in enumerate(completed_img):
+                    utils.save_image(
+                        g_img.add(1).mul(0.5),
+                        f"{str(eval_dict)}/{str(i * args.batch + j).zfill(6)}_inpaint.png",
+                        nrow=int(1),
+                         )
+
+                    utils.save_image(
+                        real_imgs[j:j+1].add(1).mul(0.5),
+                        f"{str(eval_dict)}/{str(i * args.batch + j).zfill(6)}_gt.png",
+                        nrow=int(1),
                      )
 
-                utils.save_image(
-                    real_imgs[j:j+1].add(1).mul(0.5),
-                    f"{str(eval_dict)}/{str(i * args.batch + j).zfill(6)}_gt.png",
-                    nrow=int(1),
-                 )
+                    utils.save_image(
+                        im_ins[j:j+1].add(1).mul(0.5),
+                        f"{str(eval_dict)}/{str(i * args.batch + j).zfill(6)}_mask.png",
+                        nrow=int(1),
+                       )
 
-                utils.save_image(
-                    im_ins[j:j+1].add(1).mul(0.5),
-                    f"{str(eval_dict)}/{str(i * args.batch + j).zfill(6)}_mask.png",
-                    nrow=int(1),
-                   )
+                    utils.save_image(
+                        infer_imgs[j:j+1].add(1).mul(0.5),
+                        f"{str(eval_dict)}/{str(i * args.batch + j).zfill(6)}_infer.png",
+                        nrow=int(1),
+                    )
 
-                utils.save_image(
-                    infer_imgs[j:j+1].add(1).mul(0.5),
-                    f"{str(eval_dict)}/{str(i * args.batch + j).zfill(6)}_infer.png",
-                    nrow=int(1),
-                )
+        torch.cuda.empty_cache()
+        # test_name = ["fid"]
+        fid_value, U_IDS_score, P_IDS_score = fid_score.calculate_P_IDS_U_IDS_given_paths_postfix(path1=eval_dict,
+                                                                                                  postfix1="_gt.png",
+                                                                                                  path2=eval_dict,
+                                                                                                  postfix2="_inpaint.png",
+                                                                                                  batch_size=args.batch,
+                                                                                                  device=device,
+                                                                                                  dims=2048,
+                                                                                                  num_workers=args.num_workers)
 
-    torch.cuda.empty_cache()
-    # test_name = ["fid"]
-    fid_value, U_IDS_score, P_IDS_score = fid_score.calculate_P_IDS_U_IDS_given_paths_postfix(path1=eval_dict,
-                                                                                              postfix1="_gt.png",
-                                                                                              path2=eval_dict,
-                                                                                              postfix2="_inpaint.png",
-                                                                                              batch_size=args.batch,
-                                                                                              device=device,
-                                                                                              dims=2048,
-                                                                                              num_workers=args.num_workers)
+        print('FID: ', fid_value)
+        print('U_IDS_score: ', U_IDS_score)
+        print('P_IDS_score: ', P_IDS_score)
+        print("fid_score_:%g" % fid_value)
 
-    print('FID: ', fid_value)
-    print('U_IDS_score: ', U_IDS_score)
-    print('P_IDS_score: ', P_IDS_score)
-    print("fid_score_:%g" % fid_value)
+        test_name = ['mae', 'psnr', 'ssim' ]
+        out_dic = test_matrix(path1=eval_dict, postfix1="_gt.png"
+                              , path2=eval_dict, postfix2="_inpaint.png", test_name=test_name)
+        print("mae:%g,psnr:%g,ssim:%g,fid:%g" % (out_dic['mae'], out_dic['psnr'], out_dic['ssim'], fid_value))
+        #
+        fid_list.append(float(complex(fid_value).real))
+        U_IDS_score_list.append(U_IDS_score)
+        P_IDS_score_list.append(P_IDS_score)
+        mae_list.append(out_dic['mae'])
+        psnr_list.append(out_dic['psnr'])
+        ssim_list.append(out_dic['ssim'])
 
-    test_name = ['mae', 'psnr', 'ssim', ]
-    out_dic = test_matrix(path1=eval_dict, postfix1="_gt.png"
-                          , path2=eval_dict, postfix2="_inpaint.png", test_name=test_name)
+    fid_mean = np.array(fid_list).mean()
+    U_IDS_score_mean = np.array(U_IDS_score_list).mean()
+    P_IDS_score_mean = np.array(P_IDS_score_list).mean()
+    mae_mean = np.array(mae_list).mean()
+    psnr_mean = np.array(psnr_list).mean()
+    ssim_mean = np.array(ssim_list).mean()
 
-    print("mae:%g,psnr:%g,ssim:%g,fid:%g" % (out_dic['mae'], out_dic['psnr'], out_dic['ssim'], fid_value))
+    print( f"fid_mean:{fid_mean},U_IDS_score_mean:{U_IDS_score_mean},P_IDS_score_mean:{P_IDS_score_mean},"
+           f"mae_mean:{mae_mean},psnr_mean:{psnr_mean},ssim_mean:{ssim_mean}," )
+
+    fid_std = np.array(fid_list).std()
+    U_IDS_score_std = np.array(U_IDS_score_list).std()
+    P_IDS_score_std = np.array(P_IDS_score_list).std()
+    mae_std = np.array(mae_list).std()
+    psnr_std = np.array(psnr_list).std()
+    ssim_std = np.array(ssim_list).std()
+
+    print(f"fid_std:{fid_std},U_IDS_score_std:{U_IDS_score_std},P_IDS_score_std:{P_IDS_score_std},"
+          f"mae_std:{mae_std},psnr_std:{psnr_std},ssim_std:{ssim_std},")
 
 
 
-
-def get_model(name,model_path,psp_path):
+def get_model(args,model_path,psp_path):
     generator = None
-    if name == "exe_gan":
+    if args.arch == "exe_gan":
         print("model name: exe_gan !!!!!!!!!!!!!!!")
-        generator = EXE_GAN(exe_ckpt_path=model_path, psp_ckpt_path=psp_path)
+        generator = EXE_GAN(exe_ckpt_path=model_path, psp_ckpt_path=psp_path,size=args.size)
+    elif args.arch == "cmod_gan":
+        print("model name: exe_gan !!!!!!!!!!!!!!!")
+        generator = co_mod_GAN(exe_ckpt_path=model_path)
 
     return generator
 
@@ -307,33 +221,24 @@ def eval_all():
 
     parser.add_argument("--path", type=str, help="path to the ground-truth images")
     parser.add_argument("--exe_path", type=str, default=None, help="path to the exemplar images")
-
-    parser.add_argument('--arch', type=str, default='exe_gan', help='models architectures (exe_gan)')
-    parser.add_argument(
-        "--batch", type=int, default=16, help="batch sizes for each gpu"
-    )
-    parser.add_argument("--sample_num", type=int, default=10000, help="path to the lmdb dataset")
+    parser.add_argument('--arch', type=str, default='exe_gan', help='models architectures (exe_gan | cmod_gan)')
+    parser.add_argument("--batch", type=int, default=8, help="batch sizes for each gpu"    )
     parser.add_argument("--eval_dir", type=str, default="./eval_dir", help="path to the output the generated images")
-    parser.add_argument(
-        "--num_workers",
-        type=int,
-        default=8,
-        help="number of workers",
-    )
+    parser.add_argument("--num_workers",type=int, default=8,help="number of workers", )
 
-    parser.add_argument(
-        "--size", type=int, default=256, help="image sizes for the models"
-    )
+    parser.add_argument("--size", type=int, default=256, help="image sizes for the models"    )
     parser.add_argument("--debug",type=bool,default=False,help = "for debugging")
     parser.add_argument("--psp_checkpoint_path", type=str, default="./pre-train/psp_ffhq_encode.pt", help="psp model pretrained model")
     parser.add_argument("--mixing", type=float, default=0.5, help="probability of latent code mixing")
     parser.add_argument("--ckpt", type=str, default="./checkpoint/EXE_GAN_model.pt", help="psp model pretrained model")
 
     # if masked image is not provided, the mask will be generated automatically
-    parser.add_argument("--mask_root", type=str, default="",
-                        help=" mask root for the irregualr masks")
+    parser.add_argument("--mask_root", type=str, default="",help=" mask root for the irregualr masks")
     parser.add_argument("--mask_file_root", type=str, default="", help="file names for the irregualr masks")
-    parser.add_argument("--mask_type", type=str, default="center", help=" mask type: [center,test_2.txt,test_3.txt,test_4.txt,test_5.txt,test_6.txt] ")
+    parser.add_argument("--mask_type", type=str, default="all", help=" mask type: [center,test_2.txt,test_3.txt,test_4.txt,test_5.txt,test_6.txt] ")
+
+    parser.add_argument("--repeat_times", type=int, default=1, help="repeat times to test"    )
+
 
     args = parser.parse_args()
 
@@ -341,22 +246,23 @@ def eval_all():
     mkdirs(args.eval_dir)
 
     if args.mask_type == "all":
-        mask_types = ["center", "test_2.txt", "test_3.txt", "test_4.txt", "test_5.txt", "test_6.txt", ]
+        mask_types = [ "center","test_2.txt", "test_3.txt", "test_4.txt", "test_5.txt", "test_6.txt", ]
     else:
         mask_types = [args.mask_type, ]
 
-    generator = get_model(args.arch, model_path=args.ckpt, psp_path=args.psp_checkpoint_path)
+    generator = get_model(args, model_path=args.ckpt, psp_path=args.psp_checkpoint_path)
     for mask_type_ in mask_types:
         eval_dict_ = os.path.join(args.eval_dir,mask_type_)
         delete_dirs(eval_dict_)
         mkdirs(eval_dict_)
 
-        if mask_type_ == "center":
-            mask_file = ""
-        else:
-            mask_file = os.path.join(args.mask_file_root,mask_type_)
+        if mask_type_ == "center": mask_file = ""
+        elif mask_type_ == "large_mask":  mask_file = "large_mask"
+        else: mask_file = os.path.join(args.mask_file_root,mask_type_)
+
         eval_(args, generator, device,args.mask_root,mask_file, eval_dict_)
 
 
 if __name__ == "__main__":
     eval_all()
+

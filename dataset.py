@@ -130,7 +130,7 @@ class  ImageFolder(Dataset):
             ratio = max(1.0 * self.im_size[0] / h, 1.0 * self.im_size[1] / w)
             new_w = int(ratio * w)
             new_h = int(ratio * h)
-            img_scaled = img.resize((new_w, new_h), Image.ANTIALIAS)
+            img_scaled = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
             h_rang = new_h - self.im_size[0]
             w_rang = new_w - self.im_size[1]
             h_idx = 0
@@ -236,8 +236,8 @@ class ImageFolder_with_edges(Dataset):
             ratio = max(1.0 * self.im_size[0] / h, 1.0 * self.im_size[1] / w)
             new_w = int(ratio * w)
             new_h = int(ratio * h)
-            img_scaled = img.resize((new_w,new_h),Image.ANTIALIAS)
-            edge_img_scaled = edge_img.resize((new_w,new_h),Image.ANTIALIAS)
+            img_scaled = img.resize((new_w,new_h),Image.Resampling.LANCZOS)
+            edge_img_scaled = edge_img.resize((new_w,new_h),Image.Resampling.LANCZOS)
 
             h_rang = new_h - self.im_size[0]
             w_rang = new_w - self.im_size[1]
@@ -341,7 +341,7 @@ class ImageFolder_with_mask(Dataset):
             ratio = max(1.0 * self.im_size[0] / h, 1.0 * self.im_size[1] / w)
             new_w = int(ratio * w)
             new_h = int(ratio * h)
-            img_scaled = img.resize((new_w,new_h),Image.ANTIALIAS)
+            img_scaled = img.resize((new_w,new_h),Image.Resampling.LANCZOS)
             h_rang = new_h - self.im_size[0]
             w_rang = new_w - self.im_size[1]
             h_idx = 0
