@@ -10,10 +10,8 @@ from dataset import ImageFolder,ImageFolder_with_mask
 from pytorch_fid import fid_score
 import os
 from models.exe_gan_model import EXE_GAN
-from models.stylegan2_co_mod_gan import co_mod_GAN
 import random
 import numpy as np
-from op.mask_generator import co_mod_mask_only
 
 
 def data_sampler(dataset, shuffle, distributed):
@@ -84,7 +82,7 @@ def eval_(args, generator, device,mask_root,mask_file,eval_dict,):
         sampler=data_sampler(dataset, shuffle=False, distributed=False),
         drop_last=True,
     )
-    mask_shapes = [128,128]
+    mask_shapes = [args.size//2,args.size//2]
 
 
 
@@ -204,14 +202,8 @@ def eval_(args, generator, device,mask_root,mask_file,eval_dict,):
 
 
 def get_model(args,model_path,psp_path):
-    generator = None
-    if args.arch == "exe_gan":
-        print("model name: exe_gan !!!!!!!!!!!!!!!")
-        generator = EXE_GAN(exe_ckpt_path=model_path, psp_ckpt_path=psp_path,size=args.size)
-    elif args.arch == "cmod_gan":
-        print("model name: exe_gan !!!!!!!!!!!!!!!")
-        generator = co_mod_GAN(exe_ckpt_path=model_path)
-
+    print("model name: exe_gan !!!!!!!!!!!!!!!")
+    generator = EXE_GAN(exe_ckpt_path=model_path, psp_ckpt_path=psp_path,size=args.size)
     return generator
 
 def eval_all():
@@ -221,7 +213,7 @@ def eval_all():
 
     parser.add_argument("--path", type=str, help="path to the ground-truth images")
     parser.add_argument("--exe_path", type=str, default=None, help="path to the exemplar images")
-    parser.add_argument('--arch', type=str, default='exe_gan', help='models architectures (exe_gan | cmod_gan)')
+    parser.add_argument('--arch', type=str, default='exe_gan', help='models architectures (exe_gan )')
     parser.add_argument("--batch", type=int, default=8, help="batch sizes for each gpu"    )
     parser.add_argument("--eval_dir", type=str, default="./eval_dir", help="path to the output the generated images")
     parser.add_argument("--num_workers",type=int, default=8,help="number of workers", )

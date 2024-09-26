@@ -160,7 +160,7 @@ if __name__ == "__main__":
     device = "cuda"
 
     parser = argparse.ArgumentParser(description="EXE-GAN guided facial image recovery")
-    parser.add_argument('--arch', type=str, default='exe_gan', help='models architectures (co_mod_gan | exe_gan)')
+    parser.add_argument('--arch', type=str, default='exe_gan', help='models architectures (exe_gan)')
     parser.add_argument("--batch", type=int, default=1, help="batch sizes for each gpu")
     parser.add_argument("--size", type=int, default=256, help="image sizes for the models")
     parser.add_argument("--psp_checkpoint_path", type=str, default="./pre-train/psp_ffhq_encode.pt",help="psp model pretrained model")

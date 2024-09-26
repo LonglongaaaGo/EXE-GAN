@@ -640,7 +640,7 @@ if __name__ == "__main__":
     args.n_mlp = 8
     args.start_iter = 0
 
-    from models.exe_gan import Generator, Discriminator
+    from models.exe_gan_nets import Generator, Discriminator
 
     psp_start_latent = 4
     num_psp_latent = 10

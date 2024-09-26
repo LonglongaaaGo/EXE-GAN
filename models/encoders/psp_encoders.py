@@ -5,7 +5,7 @@ from torch import nn
 from torch.nn import Linear, Conv2d, BatchNorm2d, PReLU, Sequential, Module
 
 from models.encoders.helpers import get_blocks, Flatten, bottleneck_IR, bottleneck_IR_SE
-from models.exe_gan import EqualLinear
+from models.exe_gan_nets import EqualLinear
 
 
 class GradualStyleBlock(Module):
