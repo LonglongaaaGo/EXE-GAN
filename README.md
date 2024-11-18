@@ -166,6 +166,19 @@ You can try this tool to generate your masks for editing.
       archivePrefix={arXiv},
       primaryClass={cs.CV}
   }
+
+@ARTICLE{FACEMUG,
+  author={Lu, Wanglong and Wang, Jikai and Jin, Xiaogang and Jiang, Xianta and Zhao, Hanli},
+  journal={IEEE Transactions on Visualization and Computer Graphics}, 
+  title={FACEMUG: A Multimodal Generative and Fusion Framework for Local Facial Editing}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={1-15},
+  keywords={Facial features;Semantics;Codes;Generators;Image synthesis;Faces;Image color analysis;Generative adversarial networks;image-toimage translation;multimodal fusion;image editing;facial editing},
+  doi={10.1109/TVCG.2024.3434386}}
+
+
   ```
 
 
