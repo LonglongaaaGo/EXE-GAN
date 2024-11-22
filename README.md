@@ -5,6 +5,9 @@ Official PyTorch implementation of EXE-GAN.
 [[demo_youtube]](https://www.youtube.com/watch?v=nNEc94hgjtk)
 [[demo_bilibili]](https://www.bilibili.com/video/BV14V4y1s7rz/?share_source=copy_web&vd_source=6fb8e0068d30286602ee8ea389f82ce4)
 
+Publised on [Neurocomputing](https://sciencedirect.com/journal/neurocomputing) (in press)
+
+
 <div style="text-align: justify"> We present EXE-GAN, a novel exemplar-guided facial inpainting framework using generative adversarial networks. Our
 approach can not only preserve the quality of the input facial image but also complete the image with exemplar-like facial attributes.</div>
 
