@@ -5,7 +5,7 @@ Official PyTorch implementation of EXE-GAN, publised on [[Neurocomputing]](https
 [[paper]](https://arxiv.org/abs/2202.06358)
 [[demo_youtube]](https://www.youtube.com/watch?v=nNEc94hgjtk)
 [[demo_bilibili]](https://www.bilibili.com/video/BV14V4y1s7rz/?share_source=copy_web&vd_source=6fb8e0068d30286602ee8ea389f82ce4)
-
+[![Page Views Count](https://badges.toozhao.com/badges/01JDD9C9YS7EVK0PN0QB8CJH4Z/green.svg)](https://badges.toozhao.com/stats/01JDD9C9YS7EVK0PN0QB8CJH4Z "Get your own page views count badge on badges.toozhao.com")
 
 
 
