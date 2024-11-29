@@ -18,6 +18,7 @@ approach can not only preserve the quality of the input facial image but also co
 ## Notice
 Our paper has been published in a Neurocomputing Journal!!!  (28 Nov. 2024). 
 This paper has been going through a three-year review process!!
+
 Our paper was first released on Sun, 13 Feb 2022. 
 We are thankful for the community's recognition and attention to our project.
 We also recognized that there have been some great papers published after ours,
