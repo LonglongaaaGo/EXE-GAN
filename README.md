@@ -165,14 +165,18 @@ You can try this tool to generate your masks for editing.
 ## Bibtex
 - If you find our code useful, please cite our paper:
   ```
-  @misc{lu2022inpainting,
-      title={Do Inpainting Yourself: Generative Facial Inpainting Guided by Exemplars}, 
-      author={Wanglong Lu and Hanli Zhao and Xianta Jiang and Xiaogang Jin and Yongliang Yang and Min Wang and Jiankai Lyu and Kaijie Shi},
-      year={2022},
-      eprint={2202.06358},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
-  }
+  @article{LU2024128996,
+    title = {Do inpainting yourself: Generative facial inpainting guided by exemplars},
+    journal = {Neurocomputing},
+    pages = {128996},
+    year = {2024},
+    issn = {0925-2312},
+    doi = {https://doi.org/10.1016/j.neucom.2024.128996},
+    url = {https://www.sciencedirect.com/science/article/pii/S0925231224017673},
+    author = {Wanglong Lu and Hanli Zhao and Xianta Jiang and Xiaogang Jin and Yong-Liang Yang and Kaijie Shi},
+    keywords = {Generative adversarial networks, Image generation, Image inpainting, Facial image inpainting},
+    }
+  
   @ARTICLE{FACEMUG,
     author={Lu, Wanglong and Wang, Jikai and Jin, Xiaogang and Jiang, Xianta and Zhao, Hanli},
     journal={IEEE Transactions on Visualization and Computer Graphics}, 
