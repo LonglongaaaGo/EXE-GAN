@@ -165,11 +165,12 @@ You can try this tool to generate your masks for editing.
 ## Bibtex
 - If you find our code useful, please cite our paper:
   ```
-  @article{LU2024128996,
+  @article{LU2025128996,
     title = {Do inpainting yourself: Generative facial inpainting guided by exemplars},
     journal = {Neurocomputing},
+    volume = {617},
     pages = {128996},
-    year = {2024},
+    year = {2025},
     issn = {0925-2312},
     doi = {https://doi.org/10.1016/j.neucom.2024.128996},
     url = {https://www.sciencedirect.com/science/article/pii/S0925231224017673},
