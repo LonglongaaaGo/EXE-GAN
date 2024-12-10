@@ -1,5 +1,5 @@
 # Do Inpainting Yourself: Generative Facial Inpainting Guided by Exemplars (EXE-GAN)
-Official PyTorch implementation of EXE-GAN, publised on [[Neurocomputing]](https://www.sciencedirect.com/science/article/pii/S0925231224017673?via%3Dihub) (in press).
+Official PyTorch implementation of EXE-GAN, publised on [Neurocomputing](https://www.sciencedirect.com/science/article/pii/S0925231224017673?via%3Dihub).
 
 [[Homepage]](https://longlongaaago.github.io/EXE-GAN/)
 [[paper]](https://arxiv.org/abs/2202.06358)
