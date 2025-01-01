@@ -190,6 +190,9 @@ You can try this tool to generate your masks for editing.
     doi={10.1109/TVCG.2024.3434386}}
   ```
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=LonglongaaaGo/EXE-GAN&type=Date)](https://star-history.com/#LonglongaaaGo/EXE-GAN&Date)
 
 ## Acknowledgements
 
