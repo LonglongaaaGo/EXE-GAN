@@ -1,4 +1,5 @@
-# Do Inpainting Yourself: Generative Facial Inpainting Guided by Exemplars (EXE-GAN) Neurocomputing 2025
+# Do Inpainting Yourself: Generative Facial Inpainting Guided by Exemplars (EXE-GAN) 
+# Neurocomputing 2025
 Official PyTorch implementation of EXE-GAN, publised on [Neurocomputing](https://www.sciencedirect.com/science/article/pii/S0925231224017673?via%3Dihub).
 
 [[Homepage]](https://longlongaaago.github.io/EXE-GAN/)
